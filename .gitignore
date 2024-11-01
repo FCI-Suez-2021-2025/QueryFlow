@@ -3,6 +3,7 @@
 *.txt
 *.zip
 *.db
+*.log
 
 !requirements.txt
 data/
