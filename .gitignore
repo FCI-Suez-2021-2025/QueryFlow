@@ -1,10 +1,10 @@
 .idea
 .vscode
 *.txt
-*.csv
 *.zip
 *.db
 
+!requirements.txt
 data/
 
 # Byte-compiled / optimized / DLL files
