@@ -1,8 +1,8 @@
 import sqlalchemy
 import pandas as pd
 
-from app.etl.DataSources.IDataSource import IDataSource
-from app.etl.DataSources.Database.DataTypes  import DatabaseType
+from app.etl.DataSources.local.IDataSource import IDataSource
+from app.etl.DataSources.local.Database.DataTypes import DatabaseType
 
 
 class Database(IDataSource):

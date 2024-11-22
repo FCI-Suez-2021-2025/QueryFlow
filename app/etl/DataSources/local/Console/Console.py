@@ -1,5 +1,5 @@
-from app.etl.DataSources.IDataSource import IDataSource
-from app.etl.DataSources.Console.EConsole import EConsoleTypes
+from app.etl.DataSources.local.IDataSource import IDataSource
+from app.etl.DataSources.local.Console.EConsole import EConsoleTypes
 class Console(IDataSource):
     def __init__(self, type) -> None:
         super().__init__(type)

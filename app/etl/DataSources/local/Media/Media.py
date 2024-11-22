@@ -1,7 +1,7 @@
 
-from app.etl.DataSources.IDataSource import IDataSource
+from app.etl.DataSources.local.IDataSource import IDataSource
 from app.etl.Move_Bird.bird import BirdMoveDetect,birds
-from app.etl.DataSources.Media.MediaTypes import EMedia
+from app.etl.DataSources.local.Media.MediaTypes import EMedia
 
 class Media(IDataSource):
     def __init__(self, type) -> None:

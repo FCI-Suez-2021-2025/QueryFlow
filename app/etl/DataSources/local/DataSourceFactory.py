@@ -1,13 +1,12 @@
 
-from app.etl.DataSources.Database.Database import Database
-from app.etl.DataSources.Database.DataTypes import DatabaseType
-from app.etl.DataSources.Flatfile.FlatfileTypes import EFlatfile
-from app.etl.DataSources.Flatfile.Flatfile import Flatfile
-from app.etl.DataSources.Media.MediaTypes import EMedia
-from app.etl.DataSources.IDataSource import IDataSource
-from app.etl.DataSources.Media.Media import Media
-from app.etl.DataSources.Console.Console import Console
-from app.etl.DataSources.Console.EConsole import EConsoleTypes
+from app.etl.DataSources.local.Database.Database import Database
+from app.etl.DataSources.local.Database.DataTypes import DatabaseType
+from app.etl.DataSources.local.Flatfile.FlatfileTypes import EFlatfile
+from app.etl.DataSources.local.Flatfile.Flatfile import Flatfile
+from app.etl.DataSources.local.Media.MediaTypes import EMedia
+from app.etl.DataSources.local.Media.Media import Media
+from app.etl.DataSources.local.Console.Console import Console
+from app.etl.DataSources.local.Console.EConsole import EConsoleTypes
 
 
 class DataSourceFactory():

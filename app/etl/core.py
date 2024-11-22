@@ -1,8 +1,7 @@
 import pandas as pd
 
 from app.etl.helpers import __filter
-from app.etl.DataSources.DataSourceFactory import DataSourceFactory
-from app.etl.DataSources.IDataSource import IDataSource
+from app.etl.DataSources.local.DataSourceFactory import DataSourceFactory
 
 result = None
 
