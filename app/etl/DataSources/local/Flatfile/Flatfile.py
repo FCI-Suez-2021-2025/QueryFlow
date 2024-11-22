@@ -1,5 +1,5 @@
-from app.etl.DataSources.IDataSource import IDataSource
-from app.etl.DataSources.Flatfile.FlatfileTypes import EFlatfile
+from app.etl.DataSources.local.IDataSource import IDataSource
+from app.etl.DataSources.local.Flatfile.FlatfileTypes import EFlatfile
 import pandas as pd
 
 # Eflatfile.HTML
