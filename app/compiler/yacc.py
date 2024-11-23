@@ -32,7 +32,11 @@ def p_select(p):
     file_type, file_path = p[5].split(":", 1)
     if p[6]:
         p[6] = str(p[6]).replace("\\", "\\\\")
-        load_type, load_path = p[6].split(":", 1)
+        if p[6] != 'gui':
+            load_type,load_path = p[6].split(":",1)
+        else:
+            load_type = p[6]
+            load_path = p[6]
     p[0] = (
         f"from app import etl\n"
         f"\n"
@@ -48,7 +52,7 @@ def p_select(p):
         f"    }}\n"
         f")\n"
         f""
-        f"{"etl.load(data, '{load_path}','{load_type}')" if p[6] else "" }\n"
+        f"etl.load(data, '{load_type}','{load_path}')\n"
     )
 
 
