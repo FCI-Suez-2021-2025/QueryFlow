@@ -1,118 +1,135 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+import customtkinter as ctk
+
+def show_fly_window(input_cell):
+    """Show the fly window with the Python code."""
+    fly_window = ctk.CTkToplevel(root)
+    fly_window.title("Python Code")
+    fly_window.geometry("500x350")
+    fly_window.transient(root)
+    fly_window.grab_set()
+
+    python_code = ctk.CTkTextbox(
+        fly_window,
+        wrap="word",
+        fg_color="#1E1E1E",
+        text_color="#00FFCC",
+        font=("JetBrains Mono", 12),
+    )
+    python_code.insert("0.0", f"Generated Python code:\n{input_cell.get()}")
+    python_code.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # Copy to clipboard button
+    def copy_code():
+        root.clipboard_clear()
+        root.clipboard_append(python_code.get("0.0", "end").strip())
+        root.update()
+
+    button_frame = ctk.CTkFrame(fly_window)
+    button_frame.pack(fill="x", pady=5, padx=10)
+    ctk.CTkButton(button_frame, text="Copy to Clipboard", command=copy_code).pack(
+        side="left", padx=5
+    )
+    ctk.CTkButton(button_frame, text="Close", command=fly_window.destroy).pack(
+        side="right", padx=5
+    )
 
 
-class Ui_SQLCompiler(object):
-    def setupUi(self, SQLCompiler):
-        SQLCompiler.setObjectName("SQLCompiler")
-        SQLCompiler.resize(1318, 850)
-        SQLCompiler.setMinimumSize(QtCore.QSize(1318, 850))
-        SQLCompiler.setMaximumSize(QtCore.QSize(1318, 850))
-        SQLCompiler.setMouseTracking(False)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icon/ICON.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        SQLCompiler.setWindowIcon(icon)
-        SQLCompiler.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.centralwidget = QtWidgets.QWidget(SQLCompiler)
-        self.centralwidget.setObjectName("centralwidget")
-        self.inputbox = QtWidgets.QLineEdit(self.centralwidget)
-        self.inputbox.setGeometry(QtCore.QRect(40, 50, 591, 91))
-        self.inputbox.setStyleSheet(
-                                "width: 100%;\n"
-                                "color: black;\n"
-                                "padding: 14px 14px ;\n"
-                                "margin: 8px 0;\n"
-                                "border: 2px solid;\n"
-                                " border-radius: 4px;\n"
-                                "border-color: rgb(76, 175, 80);\n"
-                                "font: 14pt Tahoma, Verdana, sans-serif;\n"
-                                "background-color: rgb(226, 250, 195);\n"
-        )
-        self.inputbox.setText("")
-        self.inputbox.setObjectName("inputbox")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(40, 20, 91, 31))
-        self.label.setStyleSheet("font: 12pt Tahoma, Verdana, sans-serif;")
-        self.label.setObjectName("label")
-        self.outputbox = QtWidgets.QTextEdit(self.centralwidget)
-        self.outputbox.setEnabled(True)
-        self.outputbox.setGeometry(QtCore.QRect(40, 170, 601, 591))
-        self.outputbox.setStyleSheet(
-                                "color: black;\n"
-                                "padding: 14px 14px ;\n"
-                                "margin: 8px 0;\n"
-                                "border: 2px solid;\n"
-                                "border-radius: 4px;\n"
-                                "border-color: rgb(76, 175, 80);\n"
-                                "font: 14pt Tahoma, Verdana, sans-serif;\n"
-                                "background-color: rgb(226, 250, 195);"
-        )
-        self.outputbox.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.outputbox.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.outputbox.setReadOnly(False)
-        self.outputbox.setObjectName("outputbox")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(40, 140, 91, 31))
-        self.label_2.setStyleSheet("font: 12pt Tahoma, Verdana, sans-serif;")
-        self.label_2.setObjectName("label_2")
-        self.combilebtn = QtWidgets.QPushButton(self.centralwidget)
-        self.combilebtn.setEnabled(True)
-        self.combilebtn.setGeometry(QtCore.QRect(40, 760, 281, 61))
-        self.combilebtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.combilebtn.setStyleSheet(
-                                "width: 100%;\n"
-                                "background-color: #4CAF50;\n"
-                                "color: white;\n"
-                                "padding: 14px 20px;\n"
-                                "margin: 8px 0;\n"
-                                "border: none;\n"
-                                "border-radius: 4px;\n"
-                                "font: 12pt Tahoma, Verdana, sans-serif;\n"
-        )
-        self.combilebtn.setObjectName("combilebtn")
-        self.excutebtn = QtWidgets.QPushButton(self.centralwidget)
-        self.excutebtn.setEnabled(True)
-        self.excutebtn.setGeometry(QtCore.QRect(360, 760, 281, 61))
-        self.excutebtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.excutebtn.setStyleSheet(
-                                "width: 100%;\n"
-                                "background-color: #4CAF50;\n"
-                                "color: white;\n"
-                                "padding: 14px 20px;\n"
-                                "margin: 8px 0;\n"
-                                "border: none;\n"
-                                "border-radius: 4px;\n"
-                                "font: 12pt Tahoma, Verdana, sans-serif;"
-        )
-        self.excutebtn.setObjectName("excutebtn")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(680, 20, 91, 31))
-        self.label_3.setStyleSheet("font: 12pt Tahoma, Verdana, sans-serif;")
-        self.label_3.setObjectName("label_3")
-        self.results = QtWidgets.QTextEdit(self.centralwidget)
-        self.results.setGeometry(QtCore.QRect(680, 50, 601, 771))
-        self.results.setStyleSheet("color: black;\n"
-                                "padding: 14px 14px ;\n"
-                                "margin: 8px 0;\n"
-                                "border: 2px solid;\n"
-                                "border-radius: 4px;\n"
-                                "border-color: rgb(76, 175, 80);\n"
-                                "font: 14pt Tahoma, Verdana, sans-serif;\n"
-                                "background-color: rgb(226, 250, 195);"
-        )
-        self.results.setReadOnly(True)
-        self.results.setObjectName("results")
-        SQLCompiler.setCentralWidget(self.centralwidget)
+def run_output(input_cell, output_label):
+    """Create the output section and display the output when the Run button is clicked."""
+    # Create the output section dynamically
+    output_section = ctk.CTkFrame(input_cell.master, corner_radius=10, fg_color="#2E2E2E")
+    output_section.pack(fill="x", padx=10, pady=5, ipadx=5, ipady=5)
 
-        self.retranslateUi(SQLCompiler)
-        QtCore.QMetaObject.connectSlotsByName(SQLCompiler)
+    # Output label
+    output_label = ctk.CTkLabel(
+        output_section, text="Output", text_color="#FFCC00", font=("JetBrains Mono", 12)
+    )
+    output_label.pack(anchor="w", padx=5)
 
-    def retranslateUi(self, SQLCompiler):
-        _translate = QtCore.QCoreApplication.translate
-        SQLCompiler.setWindowTitle(_translate("SQLCompiler", "SQL Compiler"))
-        self.label.setText(_translate("SQLCompiler", "INPUT"))
-        self.label_2.setText(_translate("SQLCompiler", "OUTPUT"))
-        self.combilebtn.setText(_translate("SQLCompiler", "COMPILE"))
-        self.excutebtn.setText(_translate("SQLCompiler", "EXECUTE"))
-        self.label_3.setText(_translate("SQLCompiler", "RESULTS"))
-import app.gui.resource_rc
+    output_cell = ctk.CTkLabel(
+        output_section,
+        text="Output will be displayed here!",
+        text_color="#FFFFFF",
+        font=("JetBrains Mono", 12),
+    )
+    output_cell.pack(fill="x", padx=5, pady=5)
 
+    # Update the output label with the result
+    output_cell.configure(text=f"Output: {input_cell.get()}")
+
+
+def add_new_cell():
+    """Add a new input-output row to the UI."""
+    create_input_row()
+
+
+def delete_cell(input_frame):
+    """Delete the specific input-output row."""
+    input_frame.destroy()
+
+
+def toggle_theme():
+    """Toggle between Light and Dark modes."""
+    current_mode = ctk.get_appearance_mode()
+    if current_mode == "Dark":
+        ctk.set_appearance_mode("Light")
+        update_button_colors("Light")
+        toggle_button.configure(text="Turn to Dark")  # Update button text for light mode
+    else:
+        ctk.set_appearance_mode("Dark")
+        update_button_colors("Dark")
+        toggle_button.configure(text="Turn to Light")  # Update button text for dark mode
+
+
+def update_button_colors(mode):
+    """Update the button colors based on the current mode."""
+    for button in sidebar.winfo_children():
+        if isinstance(button, ctk.CTkButton):
+            if mode == "Light":
+                button.configure(fg_color="white", text_color="black")
+            else:
+                button.configure(fg_color="#00CC66", text_color="white")
+
+
+# Add Input and Output rows
+def create_input_row():
+    input_frame = ctk.CTkFrame(content_frame, corner_radius=10, fg_color="#1E1E1E")
+    input_frame.pack(fill="x", padx=10, pady=10, ipadx=10, ipady=5)
+
+    # Input Section
+    input_section = ctk.CTkFrame(input_frame, corner_radius=10, fg_color="#2E2E2E")
+    input_section.pack(fill="x", padx=10, pady=5, ipadx=5, ipady=5)
+    input_label = ctk.CTkLabel(
+        input_section, text="Input", text_color="#00FFCC", font=("JetBrains Mono", 12)
+    )
+    input_label.pack(anchor="w", padx=5)
+
+    input_cell = ctk.CTkEntry(
+        input_section,
+        placeholder_text="Type your input here...",
+        font=("JetBrains Mono", 12),
+    )
+    input_cell.pack(fill="x", padx=5, pady=5)
+
+    # Button Row
+    button_row = ctk.CTkFrame(input_section, fg_color="#2E2E2E")
+    button_row.pack(fill="x", padx=5, pady=5)
+
+    ctk.CTkButton(
+        button_row,
+        text="Run",
+        command=lambda: run_output(input_cell, output_label),
+        corner_radius=5,
+        fg_color="#00CC66",
+        hover_color="#AA3333",
+).pack(fill="x", pady=10, padx=10)
+
+# Content Area
+content_frame = ctk.CTkScrollableFrame(root_frame, corner_radius=10)
+content_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+
+# Initial Cell
+create_input_row()
+
+# Run the App
+root.mainloop()
