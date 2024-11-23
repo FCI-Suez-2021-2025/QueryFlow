@@ -36,7 +36,7 @@ Rule 22    conditions -> exp logical exp
 Rule 23    conditions -> NOT conditions
 Rule 24    exp -> STRING
 Rule 25    exp -> COLNAME
-Rule 26    exp -> NUMBER
+Rule 26    exp -> FLOATNUMBER
 Rule 27    distinct -> DISTINCT
 Rule 28    distinct -> empty
 Rule 29    column -> COLNUMBER
@@ -52,10 +52,10 @@ Rule 38    order -> empty
 Rule 39    way -> ASC
 Rule 40    way -> empty
 Rule 41    way -> DESC
-Rule 42    limit -> LIMIT NUMBER
+Rule 42    limit -> LIMIT FLOATNUMBER
 Rule 43    limit -> empty
 Rule 44    value -> STRING
-Rule 45    value -> NUMBER
+Rule 45    value -> FLOATNUMBER
 Rule 46    values -> values COMMA values
 Rule 47    values -> value
 Rule 48    single_values -> LPAREN values RPAREN
@@ -83,6 +83,7 @@ DESC                 : 41
 DISTINCT             : 27
 DIVIDE               : 
 EQUAL                : 10 53
+FLOATNUMBER          : 26 42 45
 FROM                 : 6 9
 INSERT               : 7
 INTO                 : 7 35
@@ -92,7 +93,6 @@ LPAREN               : 18 48 51
 MINUS                : 
 NOT                  : 23
 NOTEQUAL             : 11
-NUMBER               : 26 42 45
 OR                   : 20
 ORDER                : 37
 PATTERN              : 
@@ -490,13 +490,13 @@ state 34
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     conditions                     shift and go to state 43
     exp                            shift and go to state 45
@@ -588,10 +588,10 @@ state 42
 
     (53) assign -> column EQUAL . value
     (44) value -> . STRING
-    (45) value -> . NUMBER
+    (45) value -> . FLOATNUMBER
 
     STRING          shift and go to state 60
-    NUMBER          shift and go to state 61
+    FLOATNUMBER     shift and go to state 61
 
     value                          shift and go to state 59
 
@@ -620,13 +620,13 @@ state 44
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     conditions                     shift and go to state 64
     exp                            shift and go to state 45
@@ -683,13 +683,13 @@ state 47
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     conditions                     shift and go to state 73
     exp                            shift and go to state 45
@@ -716,22 +716,22 @@ state 48
 
 state 49
 
-    (26) exp -> NUMBER .
+    (26) exp -> FLOATNUMBER .
 
-    LIKE            reduce using rule 26 (exp -> NUMBER .)
-    EQUAL           reduce using rule 26 (exp -> NUMBER .)
-    NOTEQUAL        reduce using rule 26 (exp -> NUMBER .)
-    BIGGER_EQUAL    reduce using rule 26 (exp -> NUMBER .)
-    BIGGER          reduce using rule 26 (exp -> NUMBER .)
-    SMALLER_EQUAL   reduce using rule 26 (exp -> NUMBER .)
-    SMALLER         reduce using rule 26 (exp -> NUMBER .)
-    AND             reduce using rule 26 (exp -> NUMBER .)
-    OR              reduce using rule 26 (exp -> NUMBER .)
-    $end            reduce using rule 26 (exp -> NUMBER .)
-    SIMICOLON       reduce using rule 26 (exp -> NUMBER .)
-    ORDER           reduce using rule 26 (exp -> NUMBER .)
-    LIMIT           reduce using rule 26 (exp -> NUMBER .)
-    RPAREN          reduce using rule 26 (exp -> NUMBER .)
+    LIKE            reduce using rule 26 (exp -> FLOATNUMBER .)
+    EQUAL           reduce using rule 26 (exp -> FLOATNUMBER .)
+    NOTEQUAL        reduce using rule 26 (exp -> FLOATNUMBER .)
+    BIGGER_EQUAL    reduce using rule 26 (exp -> FLOATNUMBER .)
+    BIGGER          reduce using rule 26 (exp -> FLOATNUMBER .)
+    SMALLER_EQUAL   reduce using rule 26 (exp -> FLOATNUMBER .)
+    SMALLER         reduce using rule 26 (exp -> FLOATNUMBER .)
+    AND             reduce using rule 26 (exp -> FLOATNUMBER .)
+    OR              reduce using rule 26 (exp -> FLOATNUMBER .)
+    $end            reduce using rule 26 (exp -> FLOATNUMBER .)
+    SIMICOLON       reduce using rule 26 (exp -> FLOATNUMBER .)
+    ORDER           reduce using rule 26 (exp -> FLOATNUMBER .)
+    LIMIT           reduce using rule 26 (exp -> FLOATNUMBER .)
+    RPAREN          reduce using rule 26 (exp -> FLOATNUMBER .)
 
 
 state 50
@@ -789,10 +789,10 @@ state 55
     (46) values -> . values COMMA values
     (47) values -> . value
     (44) value -> . STRING
-    (45) value -> . NUMBER
+    (45) value -> . FLOATNUMBER
 
     STRING          shift and go to state 60
-    NUMBER          shift and go to state 61
+    FLOATNUMBER     shift and go to state 61
 
     values                         shift and go to state 78
     value                          shift and go to state 79
@@ -840,12 +840,12 @@ state 60
 
 state 61
 
-    (45) value -> NUMBER .
+    (45) value -> FLOATNUMBER .
 
-    COMMA           reduce using rule 45 (value -> NUMBER .)
-    WHERE           reduce using rule 45 (value -> NUMBER .)
-    SIMICOLON       reduce using rule 45 (value -> NUMBER .)
-    RPAREN          reduce using rule 45 (value -> NUMBER .)
+    COMMA           reduce using rule 45 (value -> FLOATNUMBER .)
+    WHERE           reduce using rule 45 (value -> FLOATNUMBER .)
+    SIMICOLON       reduce using rule 45 (value -> FLOATNUMBER .)
+    RPAREN          reduce using rule 45 (value -> FLOATNUMBER .)
 
 
 state 62
@@ -859,13 +859,13 @@ state 62
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     conditions                     shift and go to state 80
     exp                            shift and go to state 45
@@ -881,13 +881,13 @@ state 63
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     conditions                     shift and go to state 81
     exp                            shift and go to state 45
@@ -915,11 +915,11 @@ state 66
     (22) conditions -> exp logical . exp
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NUMBER
+    (26) exp -> . FLOATNUMBER
 
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NUMBER          shift and go to state 49
+    FLOATNUMBER     shift and go to state 49
 
     exp                            shift and go to state 84
 
@@ -929,7 +929,7 @@ state 67
 
     STRING          reduce using rule 10 (logical -> EQUAL .)
     COLNAME         reduce using rule 10 (logical -> EQUAL .)
-    NUMBER          reduce using rule 10 (logical -> EQUAL .)
+    FLOATNUMBER     reduce using rule 10 (logical -> EQUAL .)
 
 
 state 68
@@ -938,7 +938,7 @@ state 68
 
     STRING          reduce using rule 11 (logical -> NOTEQUAL .)
     COLNAME         reduce using rule 11 (logical -> NOTEQUAL .)
-    NUMBER          reduce using rule 11 (logical -> NOTEQUAL .)
+    FLOATNUMBER     reduce using rule 11 (logical -> NOTEQUAL .)
 
 
 state 69
@@ -947,7 +947,7 @@ state 69
 
     STRING          reduce using rule 12 (logical -> BIGGER_EQUAL .)
     COLNAME         reduce using rule 12 (logical -> BIGGER_EQUAL .)
-    NUMBER          reduce using rule 12 (logical -> BIGGER_EQUAL .)
+    FLOATNUMBER     reduce using rule 12 (logical -> BIGGER_EQUAL .)
 
 
 state 70
@@ -956,7 +956,7 @@ state 70
 
     STRING          reduce using rule 13 (logical -> BIGGER .)
     COLNAME         reduce using rule 13 (logical -> BIGGER .)
-    NUMBER          reduce using rule 13 (logical -> BIGGER .)
+    FLOATNUMBER     reduce using rule 13 (logical -> BIGGER .)
 
 
 state 71
@@ -965,7 +965,7 @@ state 71
 
     STRING          reduce using rule 14 (logical -> SMALLER_EQUAL .)
     COLNAME         reduce using rule 14 (logical -> SMALLER_EQUAL .)
-    NUMBER          reduce using rule 14 (logical -> SMALLER_EQUAL .)
+    FLOATNUMBER     reduce using rule 14 (logical -> SMALLER_EQUAL .)
 
 
 state 72
@@ -974,7 +974,7 @@ state 72
 
     STRING          reduce using rule 15 (logical -> SMALLER .)
     COLNAME         reduce using rule 15 (logical -> SMALLER .)
-    NUMBER          reduce using rule 15 (logical -> SMALLER .)
+    FLOATNUMBER     reduce using rule 15 (logical -> SMALLER .)
 
 
 state 73
@@ -1139,7 +1139,7 @@ state 84
 state 85
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE into where order . limit SIMICOLON
-    (42) limit -> . LIMIT NUMBER
+    (42) limit -> . LIMIT FLOATNUMBER
     (43) limit -> . empty
     (5) empty -> .
 
@@ -1190,10 +1190,10 @@ state 90
     (46) values -> . values COMMA values
     (47) values -> . value
     (44) value -> . STRING
-    (45) value -> . NUMBER
+    (45) value -> . FLOATNUMBER
 
     STRING          shift and go to state 60
-    NUMBER          shift and go to state 61
+    FLOATNUMBER     shift and go to state 61
 
     values                         shift and go to state 95
     value                          shift and go to state 79
@@ -1207,9 +1207,9 @@ state 91
 
 state 92
 
-    (42) limit -> LIMIT . NUMBER
+    (42) limit -> LIMIT . FLOATNUMBER
 
-    NUMBER          shift and go to state 97
+    FLOATNUMBER     shift and go to state 97
 
 
 state 93
@@ -1251,9 +1251,9 @@ state 96
 
 state 97
 
-    (42) limit -> LIMIT NUMBER .
+    (42) limit -> LIMIT FLOATNUMBER .
 
-    SIMICOLON       reduce using rule 42 (limit -> LIMIT NUMBER .)
+    SIMICOLON       reduce using rule 42 (limit -> LIMIT FLOATNUMBER .)
 
 
 state 98
