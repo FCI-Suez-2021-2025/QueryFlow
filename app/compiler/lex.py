@@ -102,7 +102,7 @@ def t_COLNUMBER(t):
 #     return t
 
 
-@TOKEN(r"^[+-]?\d*\.\d+$")
+@TOKEN(r'-?\d*.?\d+')
 def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t
