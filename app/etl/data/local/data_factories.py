@@ -1,8 +1,7 @@
-from app.gui.displayable import *
-from app.etl.data.database import *
-from app.etl.data.flat_data import *
-from app.etl.data.media import *
-from app.etl.data.base_data_types import *
+from app.etl.data.local.database import *
+from app.etl.data.local.flat_data import *
+from app.etl.data.local.media import *
+from app.etl.data.local.base_data_types import *
 
 
 class ExtractableDataFactory:

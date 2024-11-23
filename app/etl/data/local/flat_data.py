@@ -3,7 +3,7 @@ from enum import Enum
 from typing import override
 
 import pandas as pd
-from app.etl.data.base_data_types import (
+from app.etl.data.local.base_data_types import (
     FieldPathBase,
     IExtractor,
     ILoader,

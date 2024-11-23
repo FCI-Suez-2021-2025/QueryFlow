@@ -6,7 +6,7 @@ from pandas import DataFrame
 
 from app.cv.operation_main import get_details
 from app.cv.threading_main import read_and_detect
-from app.etl.data.base_data_types import FieldPathBase, IExtractor
+from app.etl.data.local.base_data_types import FieldPathBase, IExtractor
 
 
 class MediaTypes(Enum):
