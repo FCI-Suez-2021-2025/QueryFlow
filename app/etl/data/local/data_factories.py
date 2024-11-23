@@ -29,8 +29,14 @@ class ExtractableDataFactory:
             case MediaTypes.VIDEO:
                 return VideoMaximumBirdsInFrameMedia(path)
             case "google_earth_engine" :
-                google_earth_api = GoogleEarthAPIDataCollector(path)
-                return google_earth_api.collect("2024-1-22", "2024-06-14", 30.0065457, 27.5157469, 1000)
+                google_earth_api = GoogleEarthAPIDataCollector(path.split("|")[0])
+                return google_earth_api.collect(
+                    path.split("|")[1],
+                    path.split("|")[2],
+                    float(path.split("|")[3]),
+                    float(path.split("|")[4]),
+                    float(path.split("|")[5])
+                )
             case _:
                 raise ValueError(type + " is not supported datasource type")
 
