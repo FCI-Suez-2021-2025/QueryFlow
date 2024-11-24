@@ -11,7 +11,6 @@ from tabulate import tabulate
 def compile():
     try:
         query = str(ui.inputbox.text())
-        query = query.lower()
         result = parser.parse(query)
         ui.outputbox.setText(str(result))
     except Exception as e:
