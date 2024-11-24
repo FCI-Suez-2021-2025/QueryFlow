@@ -81,8 +81,8 @@ class HTMLFlatData(IFlatData):
 
     @override
     def extract(self) -> pd.DataFrame:
-        # ! pd.read_html scan html file and returns all table as list[pd.DataFrame] so i will only return the first table
-        return pd.read_html(self.path)[0]
+        file_path, table_number = self.path.split("/", 1)
+        return pd.read_html(file_path)[table_number - 1]
 
     @override
     def load(self, data: pd.DataFrame) -> None:
