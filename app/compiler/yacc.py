@@ -158,6 +158,7 @@ def p_NUMBER(p):
     """NUMBER : NEGATIVE_INTNUMBER
     | POSITIVE_INTNUMBER
     | FLOATNUMBER"""
+    p[0] = p[1]
 
 
 ###########################
@@ -276,9 +277,7 @@ def p_limit_empty(p):
 
 def p_value(p):
     """value : STRING
-    | NEGATIVE_INTNUMBER
-    | POSITIVE_INTNUMBER
-    | FLOATNUMBER"""
+    | NUMBER"""
 
     p[0] = p[1]
 
