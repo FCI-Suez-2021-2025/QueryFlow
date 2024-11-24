@@ -24,8 +24,9 @@ reserved = {
 }
 
 tokens = [
-    "INTNUMBER",
     "FLOATNUMBER",
+    "NEGATIVE_INTNUMBER",
+    "POSITIVE_INTNUMBER",
     "PLUS",
     "MINUS",
     "TIMES",
@@ -94,16 +95,32 @@ def t_COLNUMBER(t):
     return t
 
 
-@TOKEN(r"-?\d*.?\d+")
+# region Numbers RE
+# ! Don't Change the order of these functions due not cause a conflict in the lexer
+
+
+# this will accept any float number except 0 or +0,-0 or ([+ or -] then any seuqence of 0s only)
+@TOKEN(r"[+-]?(?!0(\.0+)?$)(\d+\.\d*|\.\d+)")
 def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t
 
 
-@TOKEN(r"\d+")
-def t_INTNUMBER(t):
+# this re will exclude 0
+@TOKEN(r"-[1-9]\d*")
+def t_NEGATIVE_INTNUMBER(t):
     t.value = int(t.value)
     return t
+
+
+# this re will include 0 and + is optional
+@TOKEN(r"\+?\d+")
+def t_POSITIVE_INTNUMBER(t):
+    t.value = int(t.value)
+    return t
+
+
+# endregion
 
 
 @TOKEN(r"\[[^,\]\[]+\]")

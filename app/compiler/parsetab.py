@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'startAND ASC BIGGER BIGGER_EQUAL BY COLNAME COLNUMBER COMMA DATASOURCE DELETE DESC DISTINCT DIVIDE EQUAL FLOATNUMBER FROM INSERT INTNUMBER INTO LIKE LIMIT LPAREN MINUS NOT NOTEQUAL OR ORDER PATTERN PERCENT PLUS RPAREN SELECT SET SIMICOLON SMALLER SMALLER_EQUAL STRING TIMES UPDATE VALUES WHEREstart : select\n| insert\n| update\n| deleteempty :select : SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLONinsert : INSERT INTO DATASOURCE icolumn VALUES insert_values SIMICOLONupdate : UPDATE DATASOURCE SET assigns where SIMICOLONdelete : DELETE FROM DATASOURCE wherelogical :  EQUAL\n| NOTEQUAL\n| BIGGER_EQUAL\n| BIGGER\n| SMALLER_EQUAL\n| SMALLERwhere : WHERE conditionswhere : emptyconditions : LPAREN conditions RPARENconditions : conditions AND conditions\n| conditions OR conditions\n| exp LIKE STRING\n| exp logical expconditions : NOT conditionsexp : STRING\n| COLNAME\n| FLOATNUMBERdistinct : DISTINCTdistinct : emptycolumn : COLNUMBER\n| COLNAMEcolumns : columns COMMA columnscolumns : columnselect_columns : TIMESselect_columns : columnsinto : INTO DATASOURCEinto : emptyorder : ORDER BY column wayorder : emptyway : ASC\n| emptyway : DESClimit : LIMIT INTNUMBERlimit : emptyvalue : STRING\n| FLOATNUMBERvalues : values COMMA valuesvalues : valuesingle_values : LPAREN values RPARENinsert_values : insert_values COMMA insert_valuesinsert_values : single_valuesicolumn : LPAREN columns RPARENicolumn : emptyassign : column EQUAL valueassigns : assign COMMA assignsassigns : assign'
+_lr_signature = 'startAND ASC BIGGER BIGGER_EQUAL BY COLNAME COLNUMBER COMMA DATASOURCE DELETE DESC DISTINCT DIVIDE EQUAL FLOATNUMBER FROM INSERT INTO LIKE LIMIT LPAREN MINUS NEGATIVE_INTNUMBER NOT NOTEQUAL OR ORDER PATTERN PERCENT PLUS POSITIVE_INTNUMBER RPAREN SELECT SET SIMICOLON SMALLER SMALLER_EQUAL STRING TIMES UPDATE VALUES WHEREstart : select\n| insert\n| update\n| deleteempty :select : SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLONinsert : INSERT INTO DATASOURCE icolumn VALUES insert_values SIMICOLONupdate : UPDATE DATASOURCE SET assigns where SIMICOLONdelete : DELETE FROM DATASOURCE wherelogical :  EQUAL\n| NOTEQUAL\n| BIGGER_EQUAL\n| BIGGER\n| SMALLER_EQUAL\n| SMALLERwhere : WHERE conditionswhere : emptyconditions : LPAREN conditions RPARENconditions : conditions AND conditions\n| conditions OR conditions\n| exp LIKE STRING\n| exp logical expconditions : NOT conditionsexp : STRING\n| COLNAME\n| NEGATIVE_INTNUMBER\n| POSITIVE_INTNUMBER\n| FLOATNUMBERdistinct : DISTINCTdistinct : emptycolumn : COLNUMBER\n| COLNAMEcolumns : columns COMMA columnscolumns : columnselect_columns : TIMESselect_columns : columnsinto : INTO DATASOURCEinto : emptyorder : ORDER BY column wayorder : emptyway : ASC\n| emptyway : DESClimit : LIMIT POSITIVE_INTNUMBERlimit : emptyvalue : STRING\n| NEGATIVE_INTNUMBER\n| POSITIVE_INTNUMBER\n| FLOATNUMBERvalues : values COMMA valuesvalues : valuesingle_values : LPAREN values RPARENinsert_values : insert_values COMMA insert_valuesinsert_values : single_valuesicolumn : LPAREN columns RPARENicolumn : emptyassign : column EQUAL valueassigns : assign COMMA assignsassigns : assign'
     
-_lr_action_items = {'SELECT':([0,],[6,]),'INSERT':([0,],[7,]),'UPDATE':([0,],[8,]),'DELETE':([0,],[9,]),'$end':([1,2,3,4,5,24,33,35,43,46,48,49,57,73,76,80,81,82,83,84,96,],[0,-1,-2,-3,-4,-5,-9,-17,-16,-24,-25,-26,-8,-23,-7,-19,-20,-18,-21,-22,-6,]),'DISTINCT':([6,],[11,]),'TIMES':([6,10,11,12,],[-5,17,-27,-28,]),'COLNUMBER':([6,10,11,12,23,26,28,41,94,],[-5,20,-27,-28,20,20,20,20,20,]),'COLNAME':([6,10,11,12,23,26,28,34,41,44,47,62,63,66,67,68,69,70,71,72,94,],[-5,21,-27,-28,21,21,21,48,21,48,48,48,48,48,-10,-11,-12,-13,-14,-15,21,]),'INTO':([7,36,],[13,51,]),'DATASOURCE':([8,13,15,25,51,],[14,22,24,36,75,]),'FROM':([9,16,17,18,19,20,21,37,],[15,25,-33,-34,-32,-29,-30,-31,]),'SET':([14,],[23,]),'COMMA':([18,19,20,21,31,37,39,53,54,59,60,61,78,79,88,89,95,],[26,-32,-29,-30,41,26,26,77,-50,-53,-44,-45,90,-47,77,-48,90,]),'RPAREN':([19,20,21,37,39,46,48,49,60,61,64,73,78,79,80,81,82,83,84,95,],[-32,-29,-30,-31,56,-24,-25,-26,-44,-45,82,-23,89,-47,-19,-20,-18,-21,-22,-46,]),'EQUAL':([20,21,32,45,46,48,49,],[-29,-30,42,67,-24,-25,-26,]),'ASC':([20,21,98,],[-29,-30,100,]),'DESC':([20,21,98,],[-29,-30,102,]),'LIMIT':([20,21,35,36,43,46,48,49,50,52,73,74,75,80,81,82,83,84,85,87,98,99,100,101,102,],[-29,-30,-17,-5,-16,-24,-25,-26,-5,-36,-23,-5,-35,-19,-20,-18,-21,-22,92,-38,-5,-37,-39,-40,-41,]),'SIMICOLON':([20,21,30,31,35,36,40,43,46,48,49,50,52,53,54,58,59,60,61,73,74,75,80,81,82,83,84,85,87,88,89,91,93,97,98,99,100,101,102,],[-29,-30,-5,-55,-17,-5,57,-16,-24,-25,-26,-5,-36,76,-50,-54,-53,-44,-45,-23,-5,-35,-19,-20,-18,-21,-22,-5,-38,-49,-48,96,-43,-42,-5,-37,-39,-40,-41,]),'LPAREN':([22,34,38,44,47,62,63,77,],[28,44,55,44,44,44,44,55,]),'VALUES':([22,27,29,56,],[-5,38,-52,-51,]),'WHERE':([24,30,31,36,50,52,58,59,60,61,75,],[34,34,-55,-5,34,-36,-54,-53,-44,-45,-35,]),'NOT':([34,44,47,62,63,],[47,47,47,47,47,]),'STRING':([34,42,44,47,55,62,63,65,66,67,68,69,70,71,72,90,],[46,60,46,46,60,46,46,83,46,-10,-11,-12,-13,-14,-15,60,]),'FLOATNUMBER':([34,42,44,47,55,62,63,66,67,68,69,70,71,72,90,],[49,61,49,49,61,49,49,49,-10,-11,-12,-13,-14,-15,61,]),'ORDER':([35,36,43,46,48,49,50,52,73,74,75,80,81,82,83,84,],[-17,-5,-16,-24,-25,-26,-5,-36,-23,86,-35,-19,-20,-18,-21,-22,]),'AND':([43,46,48,49,64,73,80,81,82,83,84,],[62,-24,-25,-26,62,62,62,62,-18,-21,-22,]),'OR':([43,46,48,49,64,73,80,81,82,83,84,],[63,-24,-25,-26,63,63,63,63,-18,-21,-22,]),'LIKE':([45,46,48,49,],[65,-24,-25,-26,]),'NOTEQUAL':([45,46,48,49,],[68,-24,-25,-26,]),'BIGGER_EQUAL':([45,46,48,49,],[69,-24,-25,-26,]),'BIGGER':([45,46,48,49,],[70,-24,-25,-26,]),'SMALLER_EQUAL':([45,46,48,49,],[71,-24,-25,-26,]),'SMALLER':([45,46,48,49,],[72,-24,-25,-26,]),'BY':([86,],[94,]),'INTNUMBER':([92,],[97,]),}
+_lr_action_items = {'SELECT':([0,],[6,]),'INSERT':([0,],[7,]),'UPDATE':([0,],[8,]),'DELETE':([0,],[9,]),'$end':([1,2,3,4,5,24,33,35,43,46,48,49,50,51,59,77,80,84,85,86,87,88,100,],[0,-1,-2,-3,-4,-5,-9,-17,-16,-24,-25,-26,-27,-28,-8,-23,-7,-19,-20,-18,-21,-22,-6,]),'DISTINCT':([6,],[11,]),'TIMES':([6,10,11,12,],[-5,17,-29,-30,]),'COLNUMBER':([6,10,11,12,23,26,28,41,98,],[-5,20,-29,-30,20,20,20,20,20,]),'COLNAME':([6,10,11,12,23,26,28,34,41,44,47,66,67,70,71,72,73,74,75,76,98,],[-5,21,-29,-30,21,21,21,48,21,48,48,48,48,48,-10,-11,-12,-13,-14,-15,21,]),'INTO':([7,36,],[13,53,]),'DATASOURCE':([8,13,15,25,53,],[14,22,24,36,79,]),'FROM':([9,16,17,18,19,20,21,37,],[15,25,-35,-36,-34,-31,-32,-33,]),'SET':([14,],[23,]),'COMMA':([18,19,20,21,31,37,39,55,56,61,62,63,64,65,82,83,92,93,99,],[26,-34,-31,-32,41,26,26,81,-54,-57,-46,-47,-48,-49,94,-51,81,-52,94,]),'RPAREN':([19,20,21,37,39,46,48,49,50,51,62,63,64,65,68,77,82,83,84,85,86,87,88,99,],[-34,-31,-32,-33,58,-24,-25,-26,-27,-28,-46,-47,-48,-49,86,-23,93,-51,-19,-20,-18,-21,-22,-50,]),'EQUAL':([20,21,32,45,46,48,49,50,51,],[-31,-32,42,71,-24,-25,-26,-27,-28,]),'ASC':([20,21,102,],[-31,-32,104,]),'DESC':([20,21,102,],[-31,-32,106,]),'LIMIT':([20,21,35,36,43,46,48,49,50,51,52,54,77,78,79,84,85,86,87,88,89,91,102,103,104,105,106,],[-31,-32,-17,-5,-16,-24,-25,-26,-27,-28,-5,-38,-23,-5,-37,-19,-20,-18,-21,-22,96,-40,-5,-39,-41,-42,-43,]),'SIMICOLON':([20,21,30,31,35,36,40,43,46,48,49,50,51,52,54,55,56,60,61,62,63,64,65,77,78,79,84,85,86,87,88,89,91,92,93,95,97,101,102,103,104,105,106,],[-31,-32,-5,-59,-17,-5,59,-16,-24,-25,-26,-27,-28,-5,-38,80,-54,-58,-57,-46,-47,-48,-49,-23,-5,-37,-19,-20,-18,-21,-22,-5,-40,-53,-52,100,-45,-44,-5,-39,-41,-42,-43,]),'LPAREN':([22,34,38,44,47,66,67,81,],[28,44,57,44,44,44,44,57,]),'VALUES':([22,27,29,58,],[-5,38,-56,-55,]),'WHERE':([24,30,31,36,52,54,60,61,62,63,64,65,79,],[34,34,-59,-5,34,-38,-58,-57,-46,-47,-48,-49,-37,]),'NOT':([34,44,47,66,67,],[47,47,47,47,47,]),'STRING':([34,42,44,47,57,66,67,69,70,71,72,73,74,75,76,94,],[46,62,46,46,62,46,46,87,46,-10,-11,-12,-13,-14,-15,62,]),'NEGATIVE_INTNUMBER':([34,42,44,47,57,66,67,70,71,72,73,74,75,76,94,],[49,63,49,49,63,49,49,49,-10,-11,-12,-13,-14,-15,63,]),'POSITIVE_INTNUMBER':([34,42,44,47,57,66,67,70,71,72,73,74,75,76,94,96,],[50,64,50,50,64,50,50,50,-10,-11,-12,-13,-14,-15,64,101,]),'FLOATNUMBER':([34,42,44,47,57,66,67,70,71,72,73,74,75,76,94,],[51,65,51,51,65,51,51,51,-10,-11,-12,-13,-14,-15,65,]),'ORDER':([35,36,43,46,48,49,50,51,52,54,77,78,79,84,85,86,87,88,],[-17,-5,-16,-24,-25,-26,-27,-28,-5,-38,-23,90,-37,-19,-20,-18,-21,-22,]),'AND':([43,46,48,49,50,51,68,77,84,85,86,87,88,],[66,-24,-25,-26,-27,-28,66,66,66,66,-18,-21,-22,]),'OR':([43,46,48,49,50,51,68,77,84,85,86,87,88,],[67,-24,-25,-26,-27,-28,67,67,67,67,-18,-21,-22,]),'LIKE':([45,46,48,49,50,51,],[69,-24,-25,-26,-27,-28,]),'NOTEQUAL':([45,46,48,49,50,51,],[72,-24,-25,-26,-27,-28,]),'BIGGER_EQUAL':([45,46,48,49,50,51,],[73,-24,-25,-26,-27,-28,]),'BIGGER':([45,46,48,49,50,51,],[74,-24,-25,-26,-27,-28,]),'SMALLER_EQUAL':([45,46,48,49,50,51,],[75,-24,-25,-26,-27,-28,]),'SMALLER':([45,46,48,49,50,51,],[76,-24,-25,-26,-27,-28,]),'BY':([90,],[98,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'start':([0,],[1,]),'select':([0,],[2,]),'insert':([0,],[3,]),'update':([0,],[4,]),'delete':([0,],[5,]),'distinct':([6,],[10,]),'empty':([6,22,24,30,36,50,74,85,98,],[12,29,35,35,52,35,87,93,101,]),'select_columns':([10,],[16,]),'columns':([10,26,28,],[18,37,39,]),'column':([10,23,26,28,41,94,],[19,32,19,19,32,98,]),'icolumn':([22,],[27,]),'assigns':([23,41,],[30,58,]),'assign':([23,41,],[31,31,]),'where':([24,30,50,],[33,40,74,]),'conditions':([34,44,47,62,63,],[43,64,73,80,81,]),'exp':([34,44,47,62,63,66,],[45,45,45,45,45,84,]),'into':([36,],[50,]),'insert_values':([38,77,],[53,88,]),'single_values':([38,77,],[54,54,]),'value':([42,55,90,],[59,79,79,]),'logical':([45,],[66,]),'values':([55,90,],[78,95,]),'order':([74,],[85,]),'limit':([85,],[91,]),'way':([98,],[99,]),}
+_lr_goto_items = {'start':([0,],[1,]),'select':([0,],[2,]),'insert':([0,],[3,]),'update':([0,],[4,]),'delete':([0,],[5,]),'distinct':([6,],[10,]),'empty':([6,22,24,30,36,52,78,89,102,],[12,29,35,35,54,35,91,97,105,]),'select_columns':([10,],[16,]),'columns':([10,26,28,],[18,37,39,]),'column':([10,23,26,28,41,98,],[19,32,19,19,32,102,]),'icolumn':([22,],[27,]),'assigns':([23,41,],[30,60,]),'assign':([23,41,],[31,31,]),'where':([24,30,52,],[33,40,78,]),'conditions':([34,44,47,66,67,],[43,68,77,84,85,]),'exp':([34,44,47,66,67,70,],[45,45,45,45,45,88,]),'into':([36,],[52,]),'insert_values':([38,81,],[55,92,]),'single_values':([38,81,],[56,56,]),'value':([42,57,94,],[61,83,83,]),'logical':([45,],[70,]),'values':([57,94,],[82,99,]),'order':([78,],[89,]),'limit':([89,],[95,]),'way':([102,],[103,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -52,34 +52,38 @@ _lr_productions = [
   ('conditions -> NOT conditions','conditions',2,'p_conditions_not','yacc.py',137),
   ('exp -> STRING','exp',1,'p_exp','yacc.py',147),
   ('exp -> COLNAME','exp',1,'p_exp','yacc.py',148),
-  ('exp -> FLOATNUMBER','exp',1,'p_exp','yacc.py',149),
-  ('distinct -> DISTINCT','distinct',1,'p_distinct','yacc.py',159),
-  ('distinct -> empty','distinct',1,'p_distinct_empty','yacc.py',164),
-  ('column -> COLNUMBER','column',1,'p_column','yacc.py',172),
-  ('column -> COLNAME','column',1,'p_column','yacc.py',173),
-  ('columns -> columns COMMA columns','columns',3,'p_columns','yacc.py',178),
-  ('columns -> column','columns',1,'p_columns_base','yacc.py',185),
-  ('select_columns -> TIMES','select_columns',1,'p_select_columns_all','yacc.py',195),
-  ('select_columns -> columns','select_columns',1,'p_select_columns','yacc.py',200),
-  ('into -> INTO DATASOURCE','into',2,'p_into','yacc.py',210),
-  ('into -> empty','into',1,'p_into_empty','yacc.py',215),
-  ('order -> ORDER BY column way','order',4,'p_order','yacc.py',224),
-  ('order -> empty','order',1,'p_order_empty','yacc.py',229),
-  ('way -> ASC','way',1,'p_way_asc','yacc.py',234),
-  ('way -> empty','way',1,'p_way_asc','yacc.py',235),
-  ('way -> DESC','way',1,'p_way_desc','yacc.py',240),
-  ('limit -> LIMIT INTNUMBER','limit',2,'p_limit','yacc.py',250),
-  ('limit -> empty','limit',1,'p_limit_empty','yacc.py',258),
-  ('value -> STRING','value',1,'p_value','yacc.py',268),
-  ('value -> FLOATNUMBER','value',1,'p_value','yacc.py',269),
-  ('values -> values COMMA values','values',3,'p_values','yacc.py',274),
-  ('values -> value','values',1,'p_values_end','yacc.py',286),
-  ('single_values -> LPAREN values RPAREN','single_values',3,'p_single_values','yacc.py',291),
-  ('insert_values -> insert_values COMMA insert_values','insert_values',3,'p_insert_values','yacc.py',296),
-  ('insert_values -> single_values','insert_values',1,'p_insert_values_end','yacc.py',303),
-  ('icolumn -> LPAREN columns RPAREN','icolumn',3,'p_icolumn','yacc.py',313),
-  ('icolumn -> empty','icolumn',1,'p_icolumn_empty','yacc.py',318),
-  ('assign -> column EQUAL value','assign',3,'p_assign','yacc.py',328),
-  ('assigns -> assign COMMA assigns','assigns',3,'p_assigns','yacc.py',333),
-  ('assigns -> assign','assigns',1,'p_assigns_end','yacc.py',338),
+  ('exp -> NEGATIVE_INTNUMBER','exp',1,'p_exp','yacc.py',149),
+  ('exp -> POSITIVE_INTNUMBER','exp',1,'p_exp','yacc.py',150),
+  ('exp -> FLOATNUMBER','exp',1,'p_exp','yacc.py',151),
+  ('distinct -> DISTINCT','distinct',1,'p_distinct','yacc.py',162),
+  ('distinct -> empty','distinct',1,'p_distinct_empty','yacc.py',167),
+  ('column -> COLNUMBER','column',1,'p_column','yacc.py',175),
+  ('column -> COLNAME','column',1,'p_column','yacc.py',176),
+  ('columns -> columns COMMA columns','columns',3,'p_columns','yacc.py',181),
+  ('columns -> column','columns',1,'p_columns_base','yacc.py',188),
+  ('select_columns -> TIMES','select_columns',1,'p_select_columns_all','yacc.py',198),
+  ('select_columns -> columns','select_columns',1,'p_select_columns','yacc.py',203),
+  ('into -> INTO DATASOURCE','into',2,'p_into','yacc.py',213),
+  ('into -> empty','into',1,'p_into_empty','yacc.py',218),
+  ('order -> ORDER BY column way','order',4,'p_order','yacc.py',227),
+  ('order -> empty','order',1,'p_order_empty','yacc.py',232),
+  ('way -> ASC','way',1,'p_way_asc','yacc.py',237),
+  ('way -> empty','way',1,'p_way_asc','yacc.py',238),
+  ('way -> DESC','way',1,'p_way_desc','yacc.py',243),
+  ('limit -> LIMIT POSITIVE_INTNUMBER','limit',2,'p_limit','yacc.py',253),
+  ('limit -> empty','limit',1,'p_limit_empty','yacc.py',261),
+  ('value -> STRING','value',1,'p_value','yacc.py',271),
+  ('value -> NEGATIVE_INTNUMBER','value',1,'p_value','yacc.py',272),
+  ('value -> POSITIVE_INTNUMBER','value',1,'p_value','yacc.py',273),
+  ('value -> FLOATNUMBER','value',1,'p_value','yacc.py',274),
+  ('values -> values COMMA values','values',3,'p_values','yacc.py',280),
+  ('values -> value','values',1,'p_values_end','yacc.py',292),
+  ('single_values -> LPAREN values RPAREN','single_values',3,'p_single_values','yacc.py',297),
+  ('insert_values -> insert_values COMMA insert_values','insert_values',3,'p_insert_values','yacc.py',302),
+  ('insert_values -> single_values','insert_values',1,'p_insert_values_end','yacc.py',309),
+  ('icolumn -> LPAREN columns RPAREN','icolumn',3,'p_icolumn','yacc.py',319),
+  ('icolumn -> empty','icolumn',1,'p_icolumn_empty','yacc.py',324),
+  ('assign -> column EQUAL value','assign',3,'p_assign','yacc.py',334),
+  ('assigns -> assign COMMA assigns','assigns',3,'p_assigns','yacc.py',339),
+  ('assigns -> assign','assigns',1,'p_assigns_end','yacc.py',344),
 ]

@@ -146,8 +146,18 @@ def p_conditions_not(p):
 def p_exp(p):
     """exp : STRING
     | COLNAME
-    | FLOATNUMBER"""
+    | NUMBER"""
+
     p[0] = p[1]
+
+
+##########################
+# ========== EXP ==========
+##########################
+def p_NUMBER(p):
+    """NUMBER : NEGATIVE_INTNUMBER
+    | POSITIVE_INTNUMBER
+    | FLOATNUMBER"""
 
 
 ###########################
@@ -247,7 +257,7 @@ def p_way_desc(p):
 
 
 def p_limit(p):
-    """limit : LIMIT INTNUMBER"""
+    """limit : LIMIT POSITIVE_INTNUMBER"""
     if p[2] < 0:
         p[0] = None
     else:
@@ -266,7 +276,10 @@ def p_limit_empty(p):
 
 def p_value(p):
     """value : STRING
+    | NEGATIVE_INTNUMBER
+    | POSITIVE_INTNUMBER
     | FLOATNUMBER"""
+
     p[0] = p[1]
 
 

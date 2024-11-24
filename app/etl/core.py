@@ -47,9 +47,9 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
         data = data.sort_values(column, ascending=criteria["ORDER"][1] == "ASC")
 
     # limit
-    if criteria["LIMIT"]:
+    if criteria["LIMIT"] != None:
         data = data[: criteria["LIMIT"]]
-    #
+
     global transformed_data
     transformed_data = data
     return data
