@@ -6,7 +6,7 @@
 *.log
 
 !requirements.txt
-data/
+app/compiler/parsetab.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

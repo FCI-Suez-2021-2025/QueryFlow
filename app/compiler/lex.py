@@ -17,6 +17,7 @@ reserved = {
     "asc": "ASC",
     "desc": "DESC",
     "limit": "LIMIT",
+    "tail": "TAIL",
     "values": "VALUES",
     "update": "UPDATE",
     "set": "SET",
@@ -24,8 +25,9 @@ reserved = {
 }
 
 tokens = [
-    "INTNUMBER",
     "FLOATNUMBER",
+    "NEGATIVE_INTNUMBER",
+    "POSITIVE_INTNUMBER",
     "PLUS",
     "MINUS",
     "TIMES",
@@ -72,7 +74,8 @@ t_ignore_COMMENT = r"/\*.*\*/"  # Comment
 digit = r"([0-9])"
 nondigit = r"([_A-Za-z])"
 identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
-identifier = identifier + r"|" + r"\[" + digit + r"+\]"
+# the next line is commented to not include [column number]
+# identifier = identifier + r"|" + r"\[" + digit + r"+\]"
 
 
 @TOKEN(identifier)
@@ -93,25 +96,32 @@ def t_COLNUMBER(t):
     return t
 
 
-# for only positive integers
-# @TOKEN(r'\d+')
-# for positive and negative integers & integers
-# @TOKEN(r"^[+-]?(\d+(\.\d*)?|\.\d+)$")
-# def t_FLOATNUMBER(t):
-#     t.value = float(t.value)
-#     return t
+# region Numbers RE
+# ! Don't Change the order of these functions due not cause a conflict in the lexer
 
 
-@TOKEN(r'-?\d*.?\d+')
+# this will accept any float number except 0 or +0,-0 or ([+ or -] then any seuqence of 0s only)
+@TOKEN(r"[+-]?(?!0(\.0+)?$)(\d+\.\d*|\.\d+)")
 def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t
 
 
-@TOKEN(r"\d+")
-def t_INTNUMBER(t):
+# this re will exclude 0
+@TOKEN(r"-[1-9]\d*")
+def t_NEGATIVE_INTNUMBER(t):
     t.value = int(t.value)
     return t
+
+
+# this re will include 0 and + is optional
+@TOKEN(r"\+?\d+")
+def t_POSITIVE_INTNUMBER(t):
+    t.value = int(t.value)
+    return t
+
+
+# endregion
 
 
 @TOKEN(r"\[[^,\]\[]+\]")

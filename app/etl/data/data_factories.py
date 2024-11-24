@@ -1,10 +1,11 @@
 from app.etl.data.local.database import *
 from app.etl.data.local.flat_data import *
 from app.etl.data.local.media import *
-from app.etl.data.local.base_data_types import *
+from app.etl.data.base_data_types import *
+from app.etl.data.remote.remote_data import *
 
 
-class ExtractableDataFactory:
+class ExtractorDataFactory:
     @classmethod
     def create(cls, type: str, path: str) -> IExtractor:
         extractable_enum = cls.__getType(type)
@@ -27,6 +28,8 @@ class ExtractableDataFactory:
                 return BirdImagesMedia(path)
             case MediaTypes.VIDEO:
                 return VideoMaximumBirdsInFrameMedia(path)
+            case RemoteDataTypes.GEE:
+                return GEEDataExtractor(path)
             case _:
                 raise ValueError(type + " is not supported datasource type")
 
@@ -51,11 +54,13 @@ class ExtractableDataFactory:
             return MediaTypes.VIDEO
         elif type == "images" or type == "folder" or type == "image":
             return MediaTypes.IMAGES
+        elif type in {"google_earth_engine", "gee"}:  # Map aliases
+            return RemoteDataTypes.GEE
         else:
             raise ValueError(type + " is not supported datasource type")
 
 
-class LoadableDataFactory:
+class LoaderDataFactory:
     @classmethod
     def create(cls, type: str, path: str) -> ILoader:
         objType = cls.__getType(type)
