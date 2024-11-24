@@ -19,10 +19,11 @@ class GEEDataExtractor(FieldPathBase, IExtractor):
         self.gee_api_collector = GoogleEarthAPIDataCollector(self.path_parts[0])
 
     def extract(self) -> DataFrame:
+
         return self.gee_api_collector.collect(
-            self.path_parts[1],
-            self.path_parts[2],
-            float(self.path_parts[3]),
-            float(self.path_parts[4]),
-            float(self.path_parts[5]),
+            start_date=self.path_parts[1],
+            end_date=self.path_parts[2],
+            longitude=float(self.path_parts[3]),
+            latitude=float(self.path_parts[4]),
+            scale=float(self.path_parts[5]),
         )
