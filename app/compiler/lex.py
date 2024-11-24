@@ -72,7 +72,8 @@ t_ignore_COMMENT = r"/\*.*\*/"  # Comment
 digit = r"([0-9])"
 nondigit = r"([_A-Za-z])"
 identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
-identifier = identifier + r"|" + r"\[" + digit + r"+\]"
+# the next line is commented to not include [column number]
+# identifier = identifier + r"|" + r"\[" + digit + r"+\]"
 
 
 @TOKEN(identifier)
@@ -102,7 +103,7 @@ def t_COLNUMBER(t):
 #     return t
 
 
-@TOKEN(r'-?\d*.?\d+')
+@TOKEN(r"-?\d*.?\d+")
 def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t

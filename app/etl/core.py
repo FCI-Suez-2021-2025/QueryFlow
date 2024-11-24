@@ -1,5 +1,8 @@
 import pandas as pd
-from app.etl.data.local.data_factories import LoadableDataFactory, ExtractableDataFactory
+from app.etl.data.local.data_factories import (
+    LoadableDataFactory,
+    ExtractableDataFactory,
+)
 from app.etl.data.local.base_data_types import IExtractor, ILoader
 from app.etl.helpers import apply_filtering
 
@@ -26,8 +29,14 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
     # columns
     if criteria["COLUMNS"] != "__all__":
-        data = data.filter(items=criteria["COLUMNS"])
+        # data = data.filter(items=criteria["COLUMNS"])
 
+        # Separate column names and numbers
+        column_names = [col for col in criteria["COLUMNS"] if isinstance(col, str)]
+        column_numbers = [col for col in criteria["COLUMNS"] if isinstance(col, int)]
+
+        # Select columns
+        data = pd.concat([data[column_names], data.iloc[:, column_numbers]], axis=1)
     # distinct
     if criteria["DISTINCT"]:
         data = data.drop_duplicates()
@@ -40,7 +49,7 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
     # limit
     if criteria["LIMIT"]:
         data = data[: criteria["LIMIT"]]
-    # 
+    #
     global transformed_data
     transformed_data = data
     return data
