@@ -14,10 +14,7 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
     extractable_data: IExtractor = ExtractorDataFactory.create(
         data_source_type, data_source_path
     )
-    if type(extractable_data) == pd.DataFrame:
-        data = extractable_data
-    else:
-        data: pd.DataFrame = extractable_data.extract()
+    data: pd.DataFrame = extractable_data.extract()
     return data
 
 
