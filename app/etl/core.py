@@ -1,7 +1,7 @@
 import pandas as pd
 from app.etl.data.local.data_factories import (
-    LoadableDataFactory,
-    ExtractableDataFactory,
+    LoaderDataFactory,
+    ExtractorDataFactory,
 )
 from app.etl.data.local.base_data_types import IExtractor, ILoader
 from app.etl.helpers import apply_filtering
@@ -11,7 +11,7 @@ transformed_data = None
 
 
 def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
-    extractable_data: IExtractor = ExtractableDataFactory.create(
+    extractable_data: IExtractor = ExtractorDataFactory.create(
         data_source_type, data_source_path
     )
     if type(extractable_data) == pd.DataFrame:

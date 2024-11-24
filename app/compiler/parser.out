@@ -36,82 +36,81 @@ Rule 22    conditions -> exp logical exp
 Rule 23    conditions -> NOT conditions
 Rule 24    exp -> STRING
 Rule 25    exp -> COLNAME
-Rule 26    exp -> NEGATIVE_INTNUMBER
-Rule 27    exp -> POSITIVE_INTNUMBER
-Rule 28    exp -> FLOATNUMBER
-Rule 29    distinct -> DISTINCT
-Rule 30    distinct -> empty
-Rule 31    column -> COLNUMBER
-Rule 32    column -> COLNAME
-Rule 33    columns -> columns COMMA columns
-Rule 34    columns -> column
-Rule 35    select_columns -> TIMES
-Rule 36    select_columns -> columns
-Rule 37    into -> INTO DATASOURCE
-Rule 38    into -> empty
-Rule 39    order -> ORDER BY column way
-Rule 40    order -> empty
-Rule 41    way -> ASC
-Rule 42    way -> empty
-Rule 43    way -> DESC
-Rule 44    limit -> LIMIT POSITIVE_INTNUMBER
-Rule 45    limit -> empty
-Rule 46    value -> STRING
-Rule 47    value -> NEGATIVE_INTNUMBER
-Rule 48    value -> POSITIVE_INTNUMBER
-Rule 49    value -> FLOATNUMBER
-Rule 50    values -> values COMMA values
-Rule 51    values -> value
-Rule 52    single_values -> LPAREN values RPAREN
-Rule 53    insert_values -> insert_values COMMA insert_values
-Rule 54    insert_values -> single_values
-Rule 55    icolumn -> LPAREN columns RPAREN
-Rule 56    icolumn -> empty
-Rule 57    assign -> column EQUAL value
-Rule 58    assigns -> assign COMMA assigns
-Rule 59    assigns -> assign
+Rule 26    exp -> NUMBER
+Rule 27    NUMBER -> NEGATIVE_INTNUMBER
+Rule 28    NUMBER -> POSITIVE_INTNUMBER
+Rule 29    NUMBER -> FLOATNUMBER
+Rule 30    distinct -> DISTINCT
+Rule 31    distinct -> empty
+Rule 32    column -> COLNUMBER
+Rule 33    column -> COLNAME
+Rule 34    columns -> columns COMMA columns
+Rule 35    columns -> column
+Rule 36    select_columns -> TIMES
+Rule 37    select_columns -> columns
+Rule 38    into -> INTO DATASOURCE
+Rule 39    into -> empty
+Rule 40    order -> ORDER BY column way
+Rule 41    order -> empty
+Rule 42    way -> ASC
+Rule 43    way -> empty
+Rule 44    way -> DESC
+Rule 45    limit -> LIMIT POSITIVE_INTNUMBER
+Rule 46    limit -> empty
+Rule 47    value -> STRING
+Rule 48    value -> NUMBER
+Rule 49    values -> values COMMA values
+Rule 50    values -> value
+Rule 51    single_values -> LPAREN values RPAREN
+Rule 52    insert_values -> insert_values COMMA insert_values
+Rule 53    insert_values -> single_values
+Rule 54    icolumn -> LPAREN columns RPAREN
+Rule 55    icolumn -> empty
+Rule 56    assign -> column EQUAL value
+Rule 57    assigns -> assign COMMA assigns
+Rule 58    assigns -> assign
 
 Terminals, with rules where they appear
 
 AND                  : 19
-ASC                  : 41
+ASC                  : 42
 BIGGER               : 13
 BIGGER_EQUAL         : 12
-BY                   : 39
-COLNAME              : 25 32
-COLNUMBER            : 31
-COMMA                : 33 50 53 58
-DATASOURCE           : 6 7 8 9 37
+BY                   : 40
+COLNAME              : 25 33
+COLNUMBER            : 32
+COMMA                : 34 49 52 57
+DATASOURCE           : 6 7 8 9 38
 DELETE               : 9
-DESC                 : 43
-DISTINCT             : 29
+DESC                 : 44
+DISTINCT             : 30
 DIVIDE               : 
-EQUAL                : 10 57
-FLOATNUMBER          : 28 49
+EQUAL                : 10 56
+FLOATNUMBER          : 29
 FROM                 : 6 9
 INSERT               : 7
-INTO                 : 7 37
+INTO                 : 7 38
 LIKE                 : 21
-LIMIT                : 44
-LPAREN               : 18 52 55
+LIMIT                : 45
+LPAREN               : 18 51 54
 MINUS                : 
-NEGATIVE_INTNUMBER   : 26 47
+NEGATIVE_INTNUMBER   : 27
 NOT                  : 23
 NOTEQUAL             : 11
 OR                   : 20
-ORDER                : 39
+ORDER                : 40
 PATTERN              : 
 PERCENT              : 
 PLUS                 : 
-POSITIVE_INTNUMBER   : 27 44 48
-RPAREN               : 18 52 55
+POSITIVE_INTNUMBER   : 28 45
+RPAREN               : 18 51 54
 SELECT               : 6
 SET                  : 8
 SIMICOLON            : 6 7 8
 SMALLER              : 15
 SMALLER_EQUAL        : 14
-STRING               : 21 24 46
-TIMES                : 35
+STRING               : 21 24 47
+TIMES                : 36
 UPDATE               : 8
 VALUES               : 7
 WHERE                : 16
@@ -119,30 +118,31 @@ error                :
 
 Nonterminals, with rules where they appear
 
-assign               : 58 59
-assigns              : 8 58
-column               : 34 39 57
-columns              : 33 33 36 55
+NUMBER               : 26 48
+assign               : 57 58
+assigns              : 8 57
+column               : 35 40 56
+columns              : 34 34 37 54
 conditions           : 16 18 19 19 20 20 23
 delete               : 4
 distinct             : 6
-empty                : 17 30 38 40 42 45 56
+empty                : 17 31 39 41 43 46 55
 exp                  : 21 22 22
 icolumn              : 7
 insert               : 2
-insert_values        : 7 53 53
+insert_values        : 7 52 52
 into                 : 6
 limit                : 6
 logical              : 22
 order                : 6
 select               : 1
 select_columns       : 6
-single_values        : 54
+single_values        : 53
 start                : 0
 update               : 3
-value                : 51 57
-values               : 50 50 52
-way                  : 39
+value                : 50 56
+values               : 49 49 51
+way                  : 40
 where                : 6 8 9
 
 Parsing method: LALR
@@ -207,8 +207,8 @@ state 5
 state 6
 
     (6) select -> SELECT . distinct select_columns FROM DATASOURCE into where order limit SIMICOLON
-    (29) distinct -> . DISTINCT
-    (30) distinct -> . empty
+    (30) distinct -> . DISTINCT
+    (31) distinct -> . empty
     (5) empty -> .
 
     DISTINCT        shift and go to state 11
@@ -243,12 +243,12 @@ state 9
 state 10
 
     (6) select -> SELECT distinct . select_columns FROM DATASOURCE into where order limit SIMICOLON
-    (35) select_columns -> . TIMES
-    (36) select_columns -> . columns
-    (33) columns -> . columns COMMA columns
-    (34) columns -> . column
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (36) select_columns -> . TIMES
+    (37) select_columns -> . columns
+    (34) columns -> . columns COMMA columns
+    (35) columns -> . column
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     TIMES           shift and go to state 17
     COLNUMBER       shift and go to state 20
@@ -260,20 +260,20 @@ state 10
 
 state 11
 
-    (29) distinct -> DISTINCT .
+    (30) distinct -> DISTINCT .
 
-    TIMES           reduce using rule 29 (distinct -> DISTINCT .)
-    COLNUMBER       reduce using rule 29 (distinct -> DISTINCT .)
-    COLNAME         reduce using rule 29 (distinct -> DISTINCT .)
+    TIMES           reduce using rule 30 (distinct -> DISTINCT .)
+    COLNUMBER       reduce using rule 30 (distinct -> DISTINCT .)
+    COLNAME         reduce using rule 30 (distinct -> DISTINCT .)
 
 
 state 12
 
-    (30) distinct -> empty .
+    (31) distinct -> empty .
 
-    TIMES           reduce using rule 30 (distinct -> empty .)
-    COLNUMBER       reduce using rule 30 (distinct -> empty .)
-    COLNAME         reduce using rule 30 (distinct -> empty .)
+    TIMES           reduce using rule 31 (distinct -> empty .)
+    COLNUMBER       reduce using rule 31 (distinct -> empty .)
+    COLNAME         reduce using rule 31 (distinct -> empty .)
 
 
 state 13
@@ -306,62 +306,62 @@ state 16
 
 state 17
 
-    (35) select_columns -> TIMES .
+    (36) select_columns -> TIMES .
 
-    FROM            reduce using rule 35 (select_columns -> TIMES .)
+    FROM            reduce using rule 36 (select_columns -> TIMES .)
 
 
 state 18
 
-    (36) select_columns -> columns .
-    (33) columns -> columns . COMMA columns
+    (37) select_columns -> columns .
+    (34) columns -> columns . COMMA columns
 
-    FROM            reduce using rule 36 (select_columns -> columns .)
+    FROM            reduce using rule 37 (select_columns -> columns .)
     COMMA           shift and go to state 26
 
 
 state 19
 
-    (34) columns -> column .
+    (35) columns -> column .
 
-    COMMA           reduce using rule 34 (columns -> column .)
-    FROM            reduce using rule 34 (columns -> column .)
-    RPAREN          reduce using rule 34 (columns -> column .)
+    COMMA           reduce using rule 35 (columns -> column .)
+    FROM            reduce using rule 35 (columns -> column .)
+    RPAREN          reduce using rule 35 (columns -> column .)
 
 
 state 20
 
-    (31) column -> COLNUMBER .
+    (32) column -> COLNUMBER .
 
-    COMMA           reduce using rule 31 (column -> COLNUMBER .)
-    FROM            reduce using rule 31 (column -> COLNUMBER .)
-    EQUAL           reduce using rule 31 (column -> COLNUMBER .)
-    RPAREN          reduce using rule 31 (column -> COLNUMBER .)
-    ASC             reduce using rule 31 (column -> COLNUMBER .)
-    DESC            reduce using rule 31 (column -> COLNUMBER .)
-    LIMIT           reduce using rule 31 (column -> COLNUMBER .)
-    SIMICOLON       reduce using rule 31 (column -> COLNUMBER .)
+    COMMA           reduce using rule 32 (column -> COLNUMBER .)
+    FROM            reduce using rule 32 (column -> COLNUMBER .)
+    EQUAL           reduce using rule 32 (column -> COLNUMBER .)
+    RPAREN          reduce using rule 32 (column -> COLNUMBER .)
+    ASC             reduce using rule 32 (column -> COLNUMBER .)
+    DESC            reduce using rule 32 (column -> COLNUMBER .)
+    LIMIT           reduce using rule 32 (column -> COLNUMBER .)
+    SIMICOLON       reduce using rule 32 (column -> COLNUMBER .)
 
 
 state 21
 
-    (32) column -> COLNAME .
+    (33) column -> COLNAME .
 
-    COMMA           reduce using rule 32 (column -> COLNAME .)
-    FROM            reduce using rule 32 (column -> COLNAME .)
-    EQUAL           reduce using rule 32 (column -> COLNAME .)
-    RPAREN          reduce using rule 32 (column -> COLNAME .)
-    ASC             reduce using rule 32 (column -> COLNAME .)
-    DESC            reduce using rule 32 (column -> COLNAME .)
-    LIMIT           reduce using rule 32 (column -> COLNAME .)
-    SIMICOLON       reduce using rule 32 (column -> COLNAME .)
+    COMMA           reduce using rule 33 (column -> COLNAME .)
+    FROM            reduce using rule 33 (column -> COLNAME .)
+    EQUAL           reduce using rule 33 (column -> COLNAME .)
+    RPAREN          reduce using rule 33 (column -> COLNAME .)
+    ASC             reduce using rule 33 (column -> COLNAME .)
+    DESC            reduce using rule 33 (column -> COLNAME .)
+    LIMIT           reduce using rule 33 (column -> COLNAME .)
+    SIMICOLON       reduce using rule 33 (column -> COLNAME .)
 
 
 state 22
 
     (7) insert -> INSERT INTO DATASOURCE . icolumn VALUES insert_values SIMICOLON
-    (55) icolumn -> . LPAREN columns RPAREN
-    (56) icolumn -> . empty
+    (54) icolumn -> . LPAREN columns RPAREN
+    (55) icolumn -> . empty
     (5) empty -> .
 
     LPAREN          shift and go to state 28
@@ -373,11 +373,11 @@ state 22
 state 23
 
     (8) update -> UPDATE DATASOURCE SET . assigns where SIMICOLON
-    (58) assigns -> . assign COMMA assigns
-    (59) assigns -> . assign
-    (57) assign -> . column EQUAL value
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (57) assigns -> . assign COMMA assigns
+    (58) assigns -> . assign
+    (56) assign -> . column EQUAL value
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     COLNUMBER       shift and go to state 20
     COLNAME         shift and go to state 21
@@ -408,11 +408,11 @@ state 25
 
 state 26
 
-    (33) columns -> columns COMMA . columns
-    (33) columns -> . columns COMMA columns
-    (34) columns -> . column
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (34) columns -> columns COMMA . columns
+    (34) columns -> . columns COMMA columns
+    (35) columns -> . column
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     COLNUMBER       shift and go to state 20
     COLNAME         shift and go to state 21
@@ -429,11 +429,11 @@ state 27
 
 state 28
 
-    (55) icolumn -> LPAREN . columns RPAREN
-    (33) columns -> . columns COMMA columns
-    (34) columns -> . column
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (54) icolumn -> LPAREN . columns RPAREN
+    (34) columns -> . columns COMMA columns
+    (35) columns -> . column
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     COLNUMBER       shift and go to state 20
     COLNAME         shift and go to state 21
@@ -443,9 +443,9 @@ state 28
 
 state 29
 
-    (56) icolumn -> empty .
+    (55) icolumn -> empty .
 
-    VALUES          reduce using rule 56 (icolumn -> empty .)
+    VALUES          reduce using rule 55 (icolumn -> empty .)
 
 
 state 30
@@ -463,17 +463,17 @@ state 30
 
 state 31
 
-    (58) assigns -> assign . COMMA assigns
-    (59) assigns -> assign .
+    (57) assigns -> assign . COMMA assigns
+    (58) assigns -> assign .
 
     COMMA           shift and go to state 41
-    WHERE           reduce using rule 59 (assigns -> assign .)
-    SIMICOLON       reduce using rule 59 (assigns -> assign .)
+    WHERE           reduce using rule 58 (assigns -> assign .)
+    SIMICOLON       reduce using rule 58 (assigns -> assign .)
 
 
 state 32
 
-    (57) assign -> column . EQUAL value
+    (56) assign -> column . EQUAL value
 
     EQUAL           shift and go to state 42
 
@@ -496,20 +496,22 @@ state 34
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
     conditions                     shift and go to state 43
     exp                            shift and go to state 45
+    NUMBER                         shift and go to state 49
 
 state 35
 
@@ -524,50 +526,50 @@ state 35
 state 36
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE . into where order limit SIMICOLON
-    (37) into -> . INTO DATASOURCE
-    (38) into -> . empty
+    (38) into -> . INTO DATASOURCE
+    (39) into -> . empty
     (5) empty -> .
 
-    INTO            shift and go to state 53
+    INTO            shift and go to state 54
     WHERE           reduce using rule 5 (empty -> .)
     ORDER           reduce using rule 5 (empty -> .)
     LIMIT           reduce using rule 5 (empty -> .)
     SIMICOLON       reduce using rule 5 (empty -> .)
 
-    into                           shift and go to state 52
-    empty                          shift and go to state 54
+    into                           shift and go to state 53
+    empty                          shift and go to state 55
 
 state 37
 
-    (33) columns -> columns COMMA columns .
-    (33) columns -> columns . COMMA columns
+    (34) columns -> columns COMMA columns .
+    (34) columns -> columns . COMMA columns
 
   ! shift/reduce conflict for COMMA resolved as shift
-    FROM            reduce using rule 33 (columns -> columns COMMA columns .)
-    RPAREN          reduce using rule 33 (columns -> columns COMMA columns .)
+    FROM            reduce using rule 34 (columns -> columns COMMA columns .)
+    RPAREN          reduce using rule 34 (columns -> columns COMMA columns .)
     COMMA           shift and go to state 26
 
-  ! COMMA           [ reduce using rule 33 (columns -> columns COMMA columns .) ]
+  ! COMMA           [ reduce using rule 34 (columns -> columns COMMA columns .) ]
 
 
 state 38
 
     (7) insert -> INSERT INTO DATASOURCE icolumn VALUES . insert_values SIMICOLON
-    (53) insert_values -> . insert_values COMMA insert_values
-    (54) insert_values -> . single_values
-    (52) single_values -> . LPAREN values RPAREN
+    (52) insert_values -> . insert_values COMMA insert_values
+    (53) insert_values -> . single_values
+    (51) single_values -> . LPAREN values RPAREN
 
-    LPAREN          shift and go to state 57
+    LPAREN          shift and go to state 58
 
-    insert_values                  shift and go to state 55
-    single_values                  shift and go to state 56
+    insert_values                  shift and go to state 56
+    single_values                  shift and go to state 57
 
 state 39
 
-    (55) icolumn -> LPAREN columns . RPAREN
-    (33) columns -> columns . COMMA columns
+    (54) icolumn -> LPAREN columns . RPAREN
+    (34) columns -> columns . COMMA columns
 
-    RPAREN          shift and go to state 58
+    RPAREN          shift and go to state 59
     COMMA           shift and go to state 26
 
 
@@ -575,39 +577,41 @@ state 40
 
     (8) update -> UPDATE DATASOURCE SET assigns where . SIMICOLON
 
-    SIMICOLON       shift and go to state 59
+    SIMICOLON       shift and go to state 60
 
 
 state 41
 
-    (58) assigns -> assign COMMA . assigns
-    (58) assigns -> . assign COMMA assigns
-    (59) assigns -> . assign
-    (57) assign -> . column EQUAL value
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (57) assigns -> assign COMMA . assigns
+    (57) assigns -> . assign COMMA assigns
+    (58) assigns -> . assign
+    (56) assign -> . column EQUAL value
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     COLNUMBER       shift and go to state 20
     COLNAME         shift and go to state 21
 
     assign                         shift and go to state 31
-    assigns                        shift and go to state 60
+    assigns                        shift and go to state 61
     column                         shift and go to state 32
 
 state 42
 
-    (57) assign -> column EQUAL . value
-    (46) value -> . STRING
-    (47) value -> . NEGATIVE_INTNUMBER
-    (48) value -> . POSITIVE_INTNUMBER
-    (49) value -> . FLOATNUMBER
+    (56) assign -> column EQUAL . value
+    (47) value -> . STRING
+    (48) value -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
-    STRING          shift and go to state 62
-    NEGATIVE_INTNUMBER shift and go to state 63
-    POSITIVE_INTNUMBER shift and go to state 64
-    FLOATNUMBER     shift and go to state 65
+    STRING          shift and go to state 63
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    value                          shift and go to state 61
+    value                          shift and go to state 62
+    NUMBER                         shift and go to state 64
 
 state 43
 
@@ -619,8 +623,8 @@ state 43
     SIMICOLON       reduce using rule 16 (where -> WHERE conditions .)
     ORDER           reduce using rule 16 (where -> WHERE conditions .)
     LIMIT           reduce using rule 16 (where -> WHERE conditions .)
-    AND             shift and go to state 66
-    OR              shift and go to state 67
+    AND             shift and go to state 65
+    OR              shift and go to state 66
 
 
 state 44
@@ -634,20 +638,22 @@ state 44
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    conditions                     shift and go to state 68
+    conditions                     shift and go to state 67
     exp                            shift and go to state 45
+    NUMBER                         shift and go to state 49
 
 state 45
 
@@ -660,15 +666,15 @@ state 45
     (14) logical -> . SMALLER_EQUAL
     (15) logical -> . SMALLER
 
-    LIKE            shift and go to state 69
-    EQUAL           shift and go to state 71
-    NOTEQUAL        shift and go to state 72
-    BIGGER_EQUAL    shift and go to state 73
-    BIGGER          shift and go to state 74
-    SMALLER_EQUAL   shift and go to state 75
-    SMALLER         shift and go to state 76
+    LIKE            shift and go to state 68
+    EQUAL           shift and go to state 70
+    NOTEQUAL        shift and go to state 71
+    BIGGER_EQUAL    shift and go to state 72
+    BIGGER          shift and go to state 73
+    SMALLER_EQUAL   shift and go to state 74
+    SMALLER         shift and go to state 75
 
-    logical                        shift and go to state 70
+    logical                        shift and go to state 69
 
 state 46
 
@@ -701,20 +707,22 @@ state 47
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    conditions                     shift and go to state 77
+    conditions                     shift and go to state 76
     exp                            shift and go to state 45
+    NUMBER                         shift and go to state 49
 
 state 48
 
@@ -738,65 +746,91 @@ state 48
 
 state 49
 
-    (26) exp -> NEGATIVE_INTNUMBER .
+    (26) exp -> NUMBER .
 
-    LIKE            reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    EQUAL           reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    NOTEQUAL        reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    BIGGER_EQUAL    reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    BIGGER          reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    SMALLER_EQUAL   reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    SMALLER         reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    AND             reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    OR              reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    $end            reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    SIMICOLON       reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    ORDER           reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    LIMIT           reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
-    RPAREN          reduce using rule 26 (exp -> NEGATIVE_INTNUMBER .)
+    LIKE            reduce using rule 26 (exp -> NUMBER .)
+    EQUAL           reduce using rule 26 (exp -> NUMBER .)
+    NOTEQUAL        reduce using rule 26 (exp -> NUMBER .)
+    BIGGER_EQUAL    reduce using rule 26 (exp -> NUMBER .)
+    BIGGER          reduce using rule 26 (exp -> NUMBER .)
+    SMALLER_EQUAL   reduce using rule 26 (exp -> NUMBER .)
+    SMALLER         reduce using rule 26 (exp -> NUMBER .)
+    AND             reduce using rule 26 (exp -> NUMBER .)
+    OR              reduce using rule 26 (exp -> NUMBER .)
+    $end            reduce using rule 26 (exp -> NUMBER .)
+    SIMICOLON       reduce using rule 26 (exp -> NUMBER .)
+    ORDER           reduce using rule 26 (exp -> NUMBER .)
+    LIMIT           reduce using rule 26 (exp -> NUMBER .)
+    RPAREN          reduce using rule 26 (exp -> NUMBER .)
 
 
 state 50
 
-    (27) exp -> POSITIVE_INTNUMBER .
+    (27) NUMBER -> NEGATIVE_INTNUMBER .
 
-    LIKE            reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    EQUAL           reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    NOTEQUAL        reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    BIGGER_EQUAL    reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    BIGGER          reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    SMALLER_EQUAL   reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    SMALLER         reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    AND             reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    OR              reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    $end            reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    SIMICOLON       reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    ORDER           reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    LIMIT           reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
-    RPAREN          reduce using rule 27 (exp -> POSITIVE_INTNUMBER .)
+    LIKE            reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    EQUAL           reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    NOTEQUAL        reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    BIGGER_EQUAL    reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    BIGGER          reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    SMALLER_EQUAL   reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    SMALLER         reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    COMMA           reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    WHERE           reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    SIMICOLON       reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    RPAREN          reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    AND             reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    OR              reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    $end            reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    ORDER           reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
+    LIMIT           reduce using rule 27 (NUMBER -> NEGATIVE_INTNUMBER .)
 
 
 state 51
 
-    (28) exp -> FLOATNUMBER .
+    (28) NUMBER -> POSITIVE_INTNUMBER .
 
-    LIKE            reduce using rule 28 (exp -> FLOATNUMBER .)
-    EQUAL           reduce using rule 28 (exp -> FLOATNUMBER .)
-    NOTEQUAL        reduce using rule 28 (exp -> FLOATNUMBER .)
-    BIGGER_EQUAL    reduce using rule 28 (exp -> FLOATNUMBER .)
-    BIGGER          reduce using rule 28 (exp -> FLOATNUMBER .)
-    SMALLER_EQUAL   reduce using rule 28 (exp -> FLOATNUMBER .)
-    SMALLER         reduce using rule 28 (exp -> FLOATNUMBER .)
-    AND             reduce using rule 28 (exp -> FLOATNUMBER .)
-    OR              reduce using rule 28 (exp -> FLOATNUMBER .)
-    $end            reduce using rule 28 (exp -> FLOATNUMBER .)
-    SIMICOLON       reduce using rule 28 (exp -> FLOATNUMBER .)
-    ORDER           reduce using rule 28 (exp -> FLOATNUMBER .)
-    LIMIT           reduce using rule 28 (exp -> FLOATNUMBER .)
-    RPAREN          reduce using rule 28 (exp -> FLOATNUMBER .)
+    LIKE            reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    EQUAL           reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    NOTEQUAL        reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    BIGGER_EQUAL    reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    BIGGER          reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    SMALLER_EQUAL   reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    SMALLER         reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    COMMA           reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    WHERE           reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    SIMICOLON       reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    RPAREN          reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    AND             reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    OR              reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    $end            reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    ORDER           reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
+    LIMIT           reduce using rule 28 (NUMBER -> POSITIVE_INTNUMBER .)
 
 
 state 52
+
+    (29) NUMBER -> FLOATNUMBER .
+
+    LIKE            reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    EQUAL           reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    NOTEQUAL        reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    BIGGER_EQUAL    reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    BIGGER          reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    SMALLER_EQUAL   reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    SMALLER         reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    COMMA           reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    WHERE           reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    SIMICOLON       reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    RPAREN          reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    AND             reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    OR              reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    $end            reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    ORDER           reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+    LIMIT           reduce using rule 29 (NUMBER -> FLOATNUMBER .)
+
+
+state 53
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE into . where order limit SIMICOLON
     (16) where -> . WHERE conditions
@@ -808,133 +842,115 @@ state 52
     LIMIT           reduce using rule 5 (empty -> .)
     SIMICOLON       reduce using rule 5 (empty -> .)
 
-    where                          shift and go to state 78
+    where                          shift and go to state 77
     empty                          shift and go to state 35
-
-state 53
-
-    (37) into -> INTO . DATASOURCE
-
-    DATASOURCE      shift and go to state 79
-
 
 state 54
 
-    (38) into -> empty .
+    (38) into -> INTO . DATASOURCE
 
-    WHERE           reduce using rule 38 (into -> empty .)
-    ORDER           reduce using rule 38 (into -> empty .)
-    LIMIT           reduce using rule 38 (into -> empty .)
-    SIMICOLON       reduce using rule 38 (into -> empty .)
+    DATASOURCE      shift and go to state 78
 
 
 state 55
 
-    (7) insert -> INSERT INTO DATASOURCE icolumn VALUES insert_values . SIMICOLON
-    (53) insert_values -> insert_values . COMMA insert_values
+    (39) into -> empty .
 
-    SIMICOLON       shift and go to state 80
-    COMMA           shift and go to state 81
+    WHERE           reduce using rule 39 (into -> empty .)
+    ORDER           reduce using rule 39 (into -> empty .)
+    LIMIT           reduce using rule 39 (into -> empty .)
+    SIMICOLON       reduce using rule 39 (into -> empty .)
 
 
 state 56
 
-    (54) insert_values -> single_values .
+    (7) insert -> INSERT INTO DATASOURCE icolumn VALUES insert_values . SIMICOLON
+    (52) insert_values -> insert_values . COMMA insert_values
 
-    SIMICOLON       reduce using rule 54 (insert_values -> single_values .)
-    COMMA           reduce using rule 54 (insert_values -> single_values .)
+    SIMICOLON       shift and go to state 79
+    COMMA           shift and go to state 80
 
 
 state 57
 
-    (52) single_values -> LPAREN . values RPAREN
-    (50) values -> . values COMMA values
-    (51) values -> . value
-    (46) value -> . STRING
-    (47) value -> . NEGATIVE_INTNUMBER
-    (48) value -> . POSITIVE_INTNUMBER
-    (49) value -> . FLOATNUMBER
+    (53) insert_values -> single_values .
 
-    STRING          shift and go to state 62
-    NEGATIVE_INTNUMBER shift and go to state 63
-    POSITIVE_INTNUMBER shift and go to state 64
-    FLOATNUMBER     shift and go to state 65
+    SIMICOLON       reduce using rule 53 (insert_values -> single_values .)
+    COMMA           reduce using rule 53 (insert_values -> single_values .)
 
-    values                         shift and go to state 82
-    value                          shift and go to state 83
 
 state 58
 
-    (55) icolumn -> LPAREN columns RPAREN .
+    (51) single_values -> LPAREN . values RPAREN
+    (49) values -> . values COMMA values
+    (50) values -> . value
+    (47) value -> . STRING
+    (48) value -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
-    VALUES          reduce using rule 55 (icolumn -> LPAREN columns RPAREN .)
+    STRING          shift and go to state 63
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
+    values                         shift and go to state 81
+    value                          shift and go to state 82
+    NUMBER                         shift and go to state 64
 
 state 59
+
+    (54) icolumn -> LPAREN columns RPAREN .
+
+    VALUES          reduce using rule 54 (icolumn -> LPAREN columns RPAREN .)
+
+
+state 60
 
     (8) update -> UPDATE DATASOURCE SET assigns where SIMICOLON .
 
     $end            reduce using rule 8 (update -> UPDATE DATASOURCE SET assigns where SIMICOLON .)
 
 
-state 60
-
-    (58) assigns -> assign COMMA assigns .
-
-    WHERE           reduce using rule 58 (assigns -> assign COMMA assigns .)
-    SIMICOLON       reduce using rule 58 (assigns -> assign COMMA assigns .)
-
-
 state 61
 
-    (57) assign -> column EQUAL value .
+    (57) assigns -> assign COMMA assigns .
 
-    COMMA           reduce using rule 57 (assign -> column EQUAL value .)
-    WHERE           reduce using rule 57 (assign -> column EQUAL value .)
-    SIMICOLON       reduce using rule 57 (assign -> column EQUAL value .)
+    WHERE           reduce using rule 57 (assigns -> assign COMMA assigns .)
+    SIMICOLON       reduce using rule 57 (assigns -> assign COMMA assigns .)
 
 
 state 62
 
-    (46) value -> STRING .
+    (56) assign -> column EQUAL value .
 
-    COMMA           reduce using rule 46 (value -> STRING .)
-    WHERE           reduce using rule 46 (value -> STRING .)
-    SIMICOLON       reduce using rule 46 (value -> STRING .)
-    RPAREN          reduce using rule 46 (value -> STRING .)
+    COMMA           reduce using rule 56 (assign -> column EQUAL value .)
+    WHERE           reduce using rule 56 (assign -> column EQUAL value .)
+    SIMICOLON       reduce using rule 56 (assign -> column EQUAL value .)
 
 
 state 63
 
-    (47) value -> NEGATIVE_INTNUMBER .
+    (47) value -> STRING .
 
-    COMMA           reduce using rule 47 (value -> NEGATIVE_INTNUMBER .)
-    WHERE           reduce using rule 47 (value -> NEGATIVE_INTNUMBER .)
-    SIMICOLON       reduce using rule 47 (value -> NEGATIVE_INTNUMBER .)
-    RPAREN          reduce using rule 47 (value -> NEGATIVE_INTNUMBER .)
+    COMMA           reduce using rule 47 (value -> STRING .)
+    WHERE           reduce using rule 47 (value -> STRING .)
+    SIMICOLON       reduce using rule 47 (value -> STRING .)
+    RPAREN          reduce using rule 47 (value -> STRING .)
 
 
 state 64
 
-    (48) value -> POSITIVE_INTNUMBER .
+    (48) value -> NUMBER .
 
-    COMMA           reduce using rule 48 (value -> POSITIVE_INTNUMBER .)
-    WHERE           reduce using rule 48 (value -> POSITIVE_INTNUMBER .)
-    SIMICOLON       reduce using rule 48 (value -> POSITIVE_INTNUMBER .)
-    RPAREN          reduce using rule 48 (value -> POSITIVE_INTNUMBER .)
+    COMMA           reduce using rule 48 (value -> NUMBER .)
+    WHERE           reduce using rule 48 (value -> NUMBER .)
+    SIMICOLON       reduce using rule 48 (value -> NUMBER .)
+    RPAREN          reduce using rule 48 (value -> NUMBER .)
 
 
 state 65
-
-    (49) value -> FLOATNUMBER .
-
-    COMMA           reduce using rule 49 (value -> FLOATNUMBER .)
-    WHERE           reduce using rule 49 (value -> FLOATNUMBER .)
-    SIMICOLON       reduce using rule 49 (value -> FLOATNUMBER .)
-    RPAREN          reduce using rule 49 (value -> FLOATNUMBER .)
-
-
-state 66
 
     (19) conditions -> conditions AND . conditions
     (18) conditions -> . LPAREN conditions RPAREN
@@ -945,22 +961,24 @@ state 66
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    conditions                     shift and go to state 84
+    conditions                     shift and go to state 83
     exp                            shift and go to state 45
+    NUMBER                         shift and go to state 49
 
-state 67
+state 66
 
     (20) conditions -> conditions OR . conditions
     (18) conditions -> . LPAREN conditions RPAREN
@@ -971,57 +989,61 @@ state 67
     (23) conditions -> . NOT conditions
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     LPAREN          shift and go to state 44
     NOT             shift and go to state 47
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    conditions                     shift and go to state 85
+    conditions                     shift and go to state 84
     exp                            shift and go to state 45
+    NUMBER                         shift and go to state 49
 
-state 68
+state 67
 
     (18) conditions -> LPAREN conditions . RPAREN
     (19) conditions -> conditions . AND conditions
     (20) conditions -> conditions . OR conditions
 
-    RPAREN          shift and go to state 86
-    AND             shift and go to state 66
-    OR              shift and go to state 67
+    RPAREN          shift and go to state 85
+    AND             shift and go to state 65
+    OR              shift and go to state 66
+
+
+state 68
+
+    (21) conditions -> exp LIKE . STRING
+
+    STRING          shift and go to state 86
 
 
 state 69
 
-    (21) conditions -> exp LIKE . STRING
-
-    STRING          shift and go to state 87
-
-
-state 70
-
     (22) conditions -> exp logical . exp
     (24) exp -> . STRING
     (25) exp -> . COLNAME
-    (26) exp -> . NEGATIVE_INTNUMBER
-    (27) exp -> . POSITIVE_INTNUMBER
-    (28) exp -> . FLOATNUMBER
+    (26) exp -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
     STRING          shift and go to state 46
     COLNAME         shift and go to state 48
-    NEGATIVE_INTNUMBER shift and go to state 49
-    POSITIVE_INTNUMBER shift and go to state 50
-    FLOATNUMBER     shift and go to state 51
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
-    exp                            shift and go to state 88
+    exp                            shift and go to state 87
+    NUMBER                         shift and go to state 49
 
-state 71
+state 70
 
     (10) logical -> EQUAL .
 
@@ -1032,7 +1054,7 @@ state 71
     FLOATNUMBER     reduce using rule 10 (logical -> EQUAL .)
 
 
-state 72
+state 71
 
     (11) logical -> NOTEQUAL .
 
@@ -1043,7 +1065,7 @@ state 72
     FLOATNUMBER     reduce using rule 11 (logical -> NOTEQUAL .)
 
 
-state 73
+state 72
 
     (12) logical -> BIGGER_EQUAL .
 
@@ -1054,7 +1076,7 @@ state 73
     FLOATNUMBER     reduce using rule 12 (logical -> BIGGER_EQUAL .)
 
 
-state 74
+state 73
 
     (13) logical -> BIGGER .
 
@@ -1065,7 +1087,7 @@ state 74
     FLOATNUMBER     reduce using rule 13 (logical -> BIGGER .)
 
 
-state 75
+state 74
 
     (14) logical -> SMALLER_EQUAL .
 
@@ -1076,7 +1098,7 @@ state 75
     FLOATNUMBER     reduce using rule 14 (logical -> SMALLER_EQUAL .)
 
 
-state 76
+state 75
 
     (15) logical -> SMALLER .
 
@@ -1087,7 +1109,7 @@ state 76
     FLOATNUMBER     reduce using rule 15 (logical -> SMALLER .)
 
 
-state 77
+state 76
 
     (23) conditions -> NOT conditions .
     (19) conditions -> conditions . AND conditions
@@ -1100,74 +1122,74 @@ state 77
     ORDER           reduce using rule 23 (conditions -> NOT conditions .)
     LIMIT           reduce using rule 23 (conditions -> NOT conditions .)
     RPAREN          reduce using rule 23 (conditions -> NOT conditions .)
-    AND             shift and go to state 66
-    OR              shift and go to state 67
+    AND             shift and go to state 65
+    OR              shift and go to state 66
 
   ! AND             [ reduce using rule 23 (conditions -> NOT conditions .) ]
   ! OR              [ reduce using rule 23 (conditions -> NOT conditions .) ]
 
 
-state 78
+state 77
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE into where . order limit SIMICOLON
-    (39) order -> . ORDER BY column way
-    (40) order -> . empty
+    (40) order -> . ORDER BY column way
+    (41) order -> . empty
     (5) empty -> .
 
-    ORDER           shift and go to state 90
+    ORDER           shift and go to state 89
     LIMIT           reduce using rule 5 (empty -> .)
     SIMICOLON       reduce using rule 5 (empty -> .)
 
-    order                          shift and go to state 89
-    empty                          shift and go to state 91
+    order                          shift and go to state 88
+    empty                          shift and go to state 90
+
+state 78
+
+    (38) into -> INTO DATASOURCE .
+
+    WHERE           reduce using rule 38 (into -> INTO DATASOURCE .)
+    ORDER           reduce using rule 38 (into -> INTO DATASOURCE .)
+    LIMIT           reduce using rule 38 (into -> INTO DATASOURCE .)
+    SIMICOLON       reduce using rule 38 (into -> INTO DATASOURCE .)
+
 
 state 79
-
-    (37) into -> INTO DATASOURCE .
-
-    WHERE           reduce using rule 37 (into -> INTO DATASOURCE .)
-    ORDER           reduce using rule 37 (into -> INTO DATASOURCE .)
-    LIMIT           reduce using rule 37 (into -> INTO DATASOURCE .)
-    SIMICOLON       reduce using rule 37 (into -> INTO DATASOURCE .)
-
-
-state 80
 
     (7) insert -> INSERT INTO DATASOURCE icolumn VALUES insert_values SIMICOLON .
 
     $end            reduce using rule 7 (insert -> INSERT INTO DATASOURCE icolumn VALUES insert_values SIMICOLON .)
 
 
+state 80
+
+    (52) insert_values -> insert_values COMMA . insert_values
+    (52) insert_values -> . insert_values COMMA insert_values
+    (53) insert_values -> . single_values
+    (51) single_values -> . LPAREN values RPAREN
+
+    LPAREN          shift and go to state 58
+
+    insert_values                  shift and go to state 91
+    single_values                  shift and go to state 57
+
 state 81
 
-    (53) insert_values -> insert_values COMMA . insert_values
-    (53) insert_values -> . insert_values COMMA insert_values
-    (54) insert_values -> . single_values
-    (52) single_values -> . LPAREN values RPAREN
+    (51) single_values -> LPAREN values . RPAREN
+    (49) values -> values . COMMA values
 
-    LPAREN          shift and go to state 57
+    RPAREN          shift and go to state 92
+    COMMA           shift and go to state 93
 
-    insert_values                  shift and go to state 92
-    single_values                  shift and go to state 56
 
 state 82
 
-    (52) single_values -> LPAREN values . RPAREN
-    (50) values -> values . COMMA values
+    (50) values -> value .
 
-    RPAREN          shift and go to state 93
-    COMMA           shift and go to state 94
+    RPAREN          reduce using rule 50 (values -> value .)
+    COMMA           reduce using rule 50 (values -> value .)
 
 
 state 83
-
-    (51) values -> value .
-
-    RPAREN          reduce using rule 51 (values -> value .)
-    COMMA           reduce using rule 51 (values -> value .)
-
-
-state 84
 
     (19) conditions -> conditions AND conditions .
     (19) conditions -> conditions . AND conditions
@@ -1180,14 +1202,14 @@ state 84
     ORDER           reduce using rule 19 (conditions -> conditions AND conditions .)
     LIMIT           reduce using rule 19 (conditions -> conditions AND conditions .)
     RPAREN          reduce using rule 19 (conditions -> conditions AND conditions .)
-    AND             shift and go to state 66
-    OR              shift and go to state 67
+    AND             shift and go to state 65
+    OR              shift and go to state 66
 
   ! AND             [ reduce using rule 19 (conditions -> conditions AND conditions .) ]
   ! OR              [ reduce using rule 19 (conditions -> conditions AND conditions .) ]
 
 
-state 85
+state 84
 
     (20) conditions -> conditions OR conditions .
     (19) conditions -> conditions . AND conditions
@@ -1200,14 +1222,14 @@ state 85
     ORDER           reduce using rule 20 (conditions -> conditions OR conditions .)
     LIMIT           reduce using rule 20 (conditions -> conditions OR conditions .)
     RPAREN          reduce using rule 20 (conditions -> conditions OR conditions .)
-    AND             shift and go to state 66
-    OR              shift and go to state 67
+    AND             shift and go to state 65
+    OR              shift and go to state 66
 
   ! AND             [ reduce using rule 20 (conditions -> conditions OR conditions .) ]
   ! OR              [ reduce using rule 20 (conditions -> conditions OR conditions .) ]
 
 
-state 86
+state 85
 
     (18) conditions -> LPAREN conditions RPAREN .
 
@@ -1220,7 +1242,7 @@ state 86
     RPAREN          reduce using rule 18 (conditions -> LPAREN conditions RPAREN .)
 
 
-state 87
+state 86
 
     (21) conditions -> exp LIKE STRING .
 
@@ -1233,7 +1255,7 @@ state 87
     RPAREN          reduce using rule 21 (conditions -> exp LIKE STRING .)
 
 
-state 88
+state 87
 
     (22) conditions -> exp logical exp .
 
@@ -1246,186 +1268,188 @@ state 88
     RPAREN          reduce using rule 22 (conditions -> exp logical exp .)
 
 
-state 89
+state 88
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE into where order . limit SIMICOLON
-    (44) limit -> . LIMIT POSITIVE_INTNUMBER
-    (45) limit -> . empty
+    (45) limit -> . LIMIT POSITIVE_INTNUMBER
+    (46) limit -> . empty
     (5) empty -> .
 
-    LIMIT           shift and go to state 96
+    LIMIT           shift and go to state 95
     SIMICOLON       reduce using rule 5 (empty -> .)
 
-    limit                          shift and go to state 95
-    empty                          shift and go to state 97
+    limit                          shift and go to state 94
+    empty                          shift and go to state 96
+
+state 89
+
+    (40) order -> ORDER . BY column way
+
+    BY              shift and go to state 97
+
 
 state 90
 
-    (39) order -> ORDER . BY column way
+    (41) order -> empty .
 
-    BY              shift and go to state 98
+    LIMIT           reduce using rule 41 (order -> empty .)
+    SIMICOLON       reduce using rule 41 (order -> empty .)
 
 
 state 91
 
-    (40) order -> empty .
+    (52) insert_values -> insert_values COMMA insert_values .
+    (52) insert_values -> insert_values . COMMA insert_values
 
-    LIMIT           reduce using rule 40 (order -> empty .)
-    SIMICOLON       reduce using rule 40 (order -> empty .)
+  ! shift/reduce conflict for COMMA resolved as shift
+    SIMICOLON       reduce using rule 52 (insert_values -> insert_values COMMA insert_values .)
+    COMMA           shift and go to state 80
+
+  ! COMMA           [ reduce using rule 52 (insert_values -> insert_values COMMA insert_values .) ]
 
 
 state 92
 
-    (53) insert_values -> insert_values COMMA insert_values .
-    (53) insert_values -> insert_values . COMMA insert_values
+    (51) single_values -> LPAREN values RPAREN .
 
-  ! shift/reduce conflict for COMMA resolved as shift
-    SIMICOLON       reduce using rule 53 (insert_values -> insert_values COMMA insert_values .)
-    COMMA           shift and go to state 81
-
-  ! COMMA           [ reduce using rule 53 (insert_values -> insert_values COMMA insert_values .) ]
+    SIMICOLON       reduce using rule 51 (single_values -> LPAREN values RPAREN .)
+    COMMA           reduce using rule 51 (single_values -> LPAREN values RPAREN .)
 
 
 state 93
 
-    (52) single_values -> LPAREN values RPAREN .
+    (49) values -> values COMMA . values
+    (49) values -> . values COMMA values
+    (50) values -> . value
+    (47) value -> . STRING
+    (48) value -> . NUMBER
+    (27) NUMBER -> . NEGATIVE_INTNUMBER
+    (28) NUMBER -> . POSITIVE_INTNUMBER
+    (29) NUMBER -> . FLOATNUMBER
 
-    SIMICOLON       reduce using rule 52 (single_values -> LPAREN values RPAREN .)
-    COMMA           reduce using rule 52 (single_values -> LPAREN values RPAREN .)
+    STRING          shift and go to state 63
+    NEGATIVE_INTNUMBER shift and go to state 50
+    POSITIVE_INTNUMBER shift and go to state 51
+    FLOATNUMBER     shift and go to state 52
 
+    values                         shift and go to state 98
+    value                          shift and go to state 82
+    NUMBER                         shift and go to state 64
 
 state 94
 
-    (50) values -> values COMMA . values
-    (50) values -> . values COMMA values
-    (51) values -> . value
-    (46) value -> . STRING
-    (47) value -> . NEGATIVE_INTNUMBER
-    (48) value -> . POSITIVE_INTNUMBER
-    (49) value -> . FLOATNUMBER
+    (6) select -> SELECT distinct select_columns FROM DATASOURCE into where order limit . SIMICOLON
 
-    STRING          shift and go to state 62
-    NEGATIVE_INTNUMBER shift and go to state 63
-    POSITIVE_INTNUMBER shift and go to state 64
-    FLOATNUMBER     shift and go to state 65
+    SIMICOLON       shift and go to state 99
 
-    values                         shift and go to state 99
-    value                          shift and go to state 83
 
 state 95
 
-    (6) select -> SELECT distinct select_columns FROM DATASOURCE into where order limit . SIMICOLON
+    (45) limit -> LIMIT . POSITIVE_INTNUMBER
 
-    SIMICOLON       shift and go to state 100
+    POSITIVE_INTNUMBER shift and go to state 100
 
 
 state 96
 
-    (44) limit -> LIMIT . POSITIVE_INTNUMBER
+    (46) limit -> empty .
 
-    POSITIVE_INTNUMBER shift and go to state 101
+    SIMICOLON       reduce using rule 46 (limit -> empty .)
 
 
 state 97
 
-    (45) limit -> empty .
-
-    SIMICOLON       reduce using rule 45 (limit -> empty .)
-
-
-state 98
-
-    (39) order -> ORDER BY . column way
-    (31) column -> . COLNUMBER
-    (32) column -> . COLNAME
+    (40) order -> ORDER BY . column way
+    (32) column -> . COLNUMBER
+    (33) column -> . COLNAME
 
     COLNUMBER       shift and go to state 20
     COLNAME         shift and go to state 21
 
-    column                         shift and go to state 102
+    column                         shift and go to state 101
 
-state 99
+state 98
 
-    (50) values -> values COMMA values .
-    (50) values -> values . COMMA values
+    (49) values -> values COMMA values .
+    (49) values -> values . COMMA values
 
   ! shift/reduce conflict for COMMA resolved as shift
-    RPAREN          reduce using rule 50 (values -> values COMMA values .)
-    COMMA           shift and go to state 94
+    RPAREN          reduce using rule 49 (values -> values COMMA values .)
+    COMMA           shift and go to state 93
 
-  ! COMMA           [ reduce using rule 50 (values -> values COMMA values .) ]
+  ! COMMA           [ reduce using rule 49 (values -> values COMMA values .) ]
 
 
-state 100
+state 99
 
     (6) select -> SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLON .
 
     $end            reduce using rule 6 (select -> SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLON .)
 
 
+state 100
+
+    (45) limit -> LIMIT POSITIVE_INTNUMBER .
+
+    SIMICOLON       reduce using rule 45 (limit -> LIMIT POSITIVE_INTNUMBER .)
+
+
 state 101
 
-    (44) limit -> LIMIT POSITIVE_INTNUMBER .
-
-    SIMICOLON       reduce using rule 44 (limit -> LIMIT POSITIVE_INTNUMBER .)
-
-
-state 102
-
-    (39) order -> ORDER BY column . way
-    (41) way -> . ASC
-    (42) way -> . empty
-    (43) way -> . DESC
+    (40) order -> ORDER BY column . way
+    (42) way -> . ASC
+    (43) way -> . empty
+    (44) way -> . DESC
     (5) empty -> .
 
-    ASC             shift and go to state 104
-    DESC            shift and go to state 106
+    ASC             shift and go to state 103
+    DESC            shift and go to state 105
     LIMIT           reduce using rule 5 (empty -> .)
     SIMICOLON       reduce using rule 5 (empty -> .)
 
-    way                            shift and go to state 103
-    empty                          shift and go to state 105
+    way                            shift and go to state 102
+    empty                          shift and go to state 104
+
+state 102
+
+    (40) order -> ORDER BY column way .
+
+    LIMIT           reduce using rule 40 (order -> ORDER BY column way .)
+    SIMICOLON       reduce using rule 40 (order -> ORDER BY column way .)
+
 
 state 103
 
-    (39) order -> ORDER BY column way .
+    (42) way -> ASC .
 
-    LIMIT           reduce using rule 39 (order -> ORDER BY column way .)
-    SIMICOLON       reduce using rule 39 (order -> ORDER BY column way .)
+    LIMIT           reduce using rule 42 (way -> ASC .)
+    SIMICOLON       reduce using rule 42 (way -> ASC .)
 
 
 state 104
 
-    (41) way -> ASC .
+    (43) way -> empty .
 
-    LIMIT           reduce using rule 41 (way -> ASC .)
-    SIMICOLON       reduce using rule 41 (way -> ASC .)
+    LIMIT           reduce using rule 43 (way -> empty .)
+    SIMICOLON       reduce using rule 43 (way -> empty .)
 
 
 state 105
 
-    (42) way -> empty .
+    (44) way -> DESC .
 
-    LIMIT           reduce using rule 42 (way -> empty .)
-    SIMICOLON       reduce using rule 42 (way -> empty .)
-
-
-state 106
-
-    (43) way -> DESC .
-
-    LIMIT           reduce using rule 43 (way -> DESC .)
-    SIMICOLON       reduce using rule 43 (way -> DESC .)
+    LIMIT           reduce using rule 44 (way -> DESC .)
+    SIMICOLON       reduce using rule 44 (way -> DESC .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for COMMA in state 37 resolved as shift
-WARNING: shift/reduce conflict for AND in state 77 resolved as shift
-WARNING: shift/reduce conflict for OR in state 77 resolved as shift
+WARNING: shift/reduce conflict for AND in state 76 resolved as shift
+WARNING: shift/reduce conflict for OR in state 76 resolved as shift
+WARNING: shift/reduce conflict for AND in state 83 resolved as shift
+WARNING: shift/reduce conflict for OR in state 83 resolved as shift
 WARNING: shift/reduce conflict for AND in state 84 resolved as shift
 WARNING: shift/reduce conflict for OR in state 84 resolved as shift
-WARNING: shift/reduce conflict for AND in state 85 resolved as shift
-WARNING: shift/reduce conflict for OR in state 85 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 92 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 99 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 91 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 98 resolved as shift

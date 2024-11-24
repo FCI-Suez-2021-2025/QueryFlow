@@ -28,7 +28,6 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
     left_operand = filters_expressions_tree["left"]
 
     right_operand = filters_expressions_tree["right"]
-    print(type(right_operand))
     if (
         type(right_operand) == str
         and right_operand[0] == '"'

@@ -5,7 +5,7 @@ from app.etl.data.local.base_data_types import *
 from app.etl.data.remote.GoogleEarthAPIDataCollector import *
 
 
-class ExtractableDataFactory:
+class ExtractorDataFactory:
     @classmethod
     def create(cls, type: str, path: str) -> IExtractor:
         extractable_enum = cls.__getType(type)
@@ -28,14 +28,14 @@ class ExtractableDataFactory:
                 return BirdImagesMedia(path)
             case MediaTypes.VIDEO:
                 return VideoMaximumBirdsInFrameMedia(path)
-            case "google_earth_engine" :
+            case "google_earth_engine":
                 google_earth_api = GoogleEarthAPIDataCollector(path.split("|")[0])
                 return google_earth_api.collect(
                     path.split("|")[1],
                     path.split("|")[2],
                     float(path.split("|")[3]),
                     float(path.split("|")[4]),
-                    float(path.split("|")[5])
+                    float(path.split("|")[5]),
                 )
             case _:
                 raise ValueError(type + " is not supported datasource type")
@@ -67,7 +67,7 @@ class ExtractableDataFactory:
             raise ValueError(type + " is not supported datasource type")
 
 
-class LoadableDataFactory:
+class LoaderDataFactory:
     @classmethod
     def create(cls, type: str, path: str) -> ILoader:
         objType = cls.__getType(type)
