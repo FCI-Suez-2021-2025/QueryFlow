@@ -30,8 +30,8 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
     right_operand = filters_expressions_tree["right"]
     if (
         type(right_operand) == str
-        and right_operand[0] == '"'
-        and right_operand[-1] == '"'
+        and right_operand.startswith('"')
+        and right_operand.endswith('"')
     ):
         right_operand: str = right_operand[1:-1]
 
