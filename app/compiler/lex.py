@@ -94,15 +94,6 @@ def t_COLNUMBER(t):
     return t
 
 
-# for only positive integers
-# @TOKEN(r'\d+')
-# for positive and negative integers & integers
-# @TOKEN(r"^[+-]?(\d+(\.\d*)?|\.\d+)$")
-# def t_FLOATNUMBER(t):
-#     t.value = float(t.value)
-#     return t
-
-
 @TOKEN(r"-?\d*.?\d+")
 def t_FLOATNUMBER(t):
     t.value = float(t.value)

@@ -146,8 +146,7 @@ def p_conditions_not(p):
 def p_exp(p):
     """exp : STRING
     | COLNAME
-    | FLOATNUMBER
-    | INTNUMBER"""
+    | FLOATNUMBER"""
     p[0] = p[1]
 
 
@@ -221,7 +220,7 @@ def p_into_empty(p):
 ###########################
 
 
-def p_order_by(p):
+def p_order(p):
     """order : ORDER BY column way"""
     p[0] = (p[3], p[4])
 
