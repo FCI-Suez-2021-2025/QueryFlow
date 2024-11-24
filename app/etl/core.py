@@ -11,10 +11,10 @@ transformed_data = None
 
 
 def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
-    extractable_data: IExtractor = ExtractorDataFactory.create(
+    data_extractor: IExtractor = ExtractorDataFactory.create(
         data_source_type, data_source_path
     )
-    data: pd.DataFrame = extractable_data.extract()
+    data: pd.DataFrame = data_extractor.extract()
     return data
 
 
