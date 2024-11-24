@@ -2,7 +2,7 @@ from app.etl.data.local.database import *
 from app.etl.data.local.flat_data import *
 from app.etl.data.local.media import *
 from app.etl.data.local.base_data_types import *
-from app.etl.data.remote.GoogleEarthAPIDataCollector import *
+from app.etl.data.remote.remote_data import *
 
 
 class ExtractorDataFactory:
@@ -28,15 +28,8 @@ class ExtractorDataFactory:
                 return BirdImagesMedia(path)
             case MediaTypes.VIDEO:
                 return VideoMaximumBirdsInFrameMedia(path)
-            case "google_earth_engine":
-                google_earth_api = GoogleEarthAPIDataCollector(path.split("|")[0])
-                return google_earth_api.collect(
-                    path.split("|")[1],
-                    path.split("|")[2],
-                    float(path.split("|")[3]),
-                    float(path.split("|")[4]),
-                    float(path.split("|")[5]),
-                )
+            case RemoteDataTypes.GEE:
+                return GEEDataExtractor(path)
             case _:
                 raise ValueError(type + " is not supported datasource type")
 
@@ -62,7 +55,7 @@ class ExtractorDataFactory:
         elif type == "images" or type == "folder" or type == "image":
             return MediaTypes.IMAGES
         elif type in {"google_earth_engine", "gee"}:  # Map aliases
-            return "google_earth_engine"
+            return RemoteDataTypes.GEE
         else:
             raise ValueError(type + " is not supported datasource type")
 
