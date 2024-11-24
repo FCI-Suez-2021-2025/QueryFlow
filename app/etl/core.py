@@ -1,5 +1,5 @@
 import pandas as pd
-from app.etl.data.local.data_factories import (
+from app.etl.data_factories import (
     LoaderDataFactory,
     ExtractorDataFactory,
 )
@@ -56,5 +56,5 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
 
 def load(data: pd.DataFrame, source_type: str, data_destination: str):
-    data_loader: ILoader = LoadableDataFactory.create(source_type, data_destination)
+    data_loader: ILoader = LoaderDataFactory.create(source_type, data_destination)
     data_loader.load(data)
