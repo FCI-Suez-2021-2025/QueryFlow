@@ -46,11 +46,14 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
     # limit
     if criteria["LIMIT_OR_TAIL"] != None:
         operator, number = criteria["LIMIT_OR_TAIL"]
-        if operator == "limit":
+        if number == 0:
+            # empty data frame
+            data = pd.DataFrame(columns=data.columns)
+        elif operator == "limit":
             data = data[:number]
-        elif operator == "tail":
+        else:
             data = data[-number:]
-            
+
     global transformed_data
     transformed_data = data
     return data
