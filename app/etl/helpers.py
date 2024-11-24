@@ -79,8 +79,3 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
 #         return 'XML'
 #     elif re.search( r'(.+\.xlsx)| (.+\.xls) | (.+\.xlsm)| (.+\.xlsb)| (.+\.odf)| (.+\.ods)| (.+\.odt)', data_source):
 #         return 'EXCEL'
-
-# def __get_source_type_forward(data_source:str) -> str:
-#     ds_type,ds_path =data_source.split(":",1)
-#     print(ds_type,ds_path)
-#     return 'CSV'
