@@ -15,7 +15,7 @@ class RemoteDataTypes(Enum):
 class GEEDataExtractor(FieldPathBase, IExtractor):
     def __init__(self, path: str):
         FieldPathBase.__init__(self, path)
-        self.path_parts = path.split("|")
+        self.path_parts = self.path.split("|")
         self.gee_api_collector = GoogleEarthAPIDataCollector(self.path_parts[0])
 
     def extract(self) -> DataFrame:
