@@ -19,7 +19,7 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
 
 
 def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
-    print("step over")
+
     # filtering
     if criteria["FILTER"]:
         data = apply_filtering(data, criteria["FILTER"])
