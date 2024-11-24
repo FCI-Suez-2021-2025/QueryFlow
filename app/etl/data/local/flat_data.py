@@ -81,7 +81,7 @@ class HTMLFlatData(IFlatData):
 
     @override
     def extract(self) -> pd.DataFrame:
-        file_path, table_number = self.path.split("/", 1)
+        file_path, table_number = self.path.split("|", 1)
         return pd.read_html(file_path)[table_number - 1]
 
     @override
