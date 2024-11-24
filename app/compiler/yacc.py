@@ -24,7 +24,7 @@ def p_error(p):
 
 
 def p_select(p):
-    "select : SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLON"
+    """select : SELECT distinct select_columns FROM DATASOURCE into where order limit_or_tail SIMICOLON"""
 
     if type(p[3]) == str:
         p[3] = "'" + p[3] + "'"
@@ -44,7 +44,7 @@ def p_select(p):
         f"        'DISTINCT': {p[2]},\n"
         f"        'FILTER':   {p[7]},\n"
         f"        'ORDER':    {p[8]},\n"
-        f"        'LIMIT':    {p[9]},\n"
+        f"        'LIMIT_OR_TAIL':    {p[9]},\n"
         f"    }}\n"
         f")\n"
         f""
@@ -253,20 +253,21 @@ def p_way_desc(p):
 
 
 ###########################
-# ========= Limit ==========
+# ========= Limit & Tail ==========
 ###########################
 
 
-def p_limit(p):
-    """limit : LIMIT POSITIVE_INTNUMBER"""
+def p_limit_or_tail(p):
+    """limit_or_tail : LIMIT POSITIVE_INTNUMBER
+    | TAIL POSITIVE_INTNUMBER"""
     if p[2] < 0:
         p[0] = None
     else:
-        p[0] = p[2]
+        p[0] = (p[1], p[2])
 
 
-def p_limit_empty(p):
-    "limit : empty"
+def p_limit_or_tail_empty(p):
+    """limit_or_tail : empty"""
     p[0] = None
 
 

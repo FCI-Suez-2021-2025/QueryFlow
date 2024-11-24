@@ -17,6 +17,7 @@ reserved = {
     "asc": "ASC",
     "desc": "DESC",
     "limit": "LIMIT",
+    "tail": "TAIL",
     "values": "VALUES",
     "update": "UPDATE",
     "set": "SET",
