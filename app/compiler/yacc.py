@@ -260,10 +260,7 @@ def p_way_desc(p):
 def p_limit_or_tail(p):
     """limit_or_tail : LIMIT POSITIVE_INTNUMBER
     | TAIL POSITIVE_INTNUMBER"""
-    if p[2] < 0:
-        p[0] = None
-    else:
-        p[0] = (p[1], p[2])
+    p[0] = (p[1], p[2])
 
 
 def p_limit_or_tail_empty(p):
