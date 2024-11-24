@@ -36,9 +36,9 @@ def p_select(p):
     p[0] = (
         f"from app import etl\n"
         f"\n"
-        f"data = etl.extract('{file_type}','{file_path}')\n"
-        f"data = etl.transform(\n"
-        f"   data,\n"
+        f"extracted_data = etl.extract('{file_type}','{file_path}')\n"
+        f"transformed_data = etl.transform(\n"
+        f"   extracted_data,\n"
         f"   {{\n"
         f"        'COLUMNS':  {p[3]},\n"
         f"        'DISTINCT': {p[2]},\n"
@@ -48,7 +48,7 @@ def p_select(p):
         f"    }}\n"
         f")\n"
         f""
-        f"{f"etl.load(data, '{load_path}','{load_type}')" if p[6] else "" }\n"
+        f"{f"etl.load(transformed_data,'{load_type}','{load_path}')" if p[6] else "" }\n"
     )
 
 

@@ -34,13 +34,58 @@ def execute_python_code(python_code: str) -> Union[Success[DataFrame], Failure[s
         python_code (str): The Python code to be executed as a string. The code should perform
                            transformations on data that result in a variable named `transformed_data`
                            being created, which will be returned as a `DataFrame` on success.
-                             Example of a valid `python_code` argument:
+                           Example of `python_code` argument value:
+
+                           **Example 1**
                            ```python
+                            from app import etl
 
-                           import pandas as pd
-                           data = {'name': ['Alice', 'Bob'], 'age': [30, 25]}
-                           transformed_data = pd.DataFrame(data)
+                            extracted_data= etl.extract('csv','data_sets/hotel_bookings.csv')
+                            transformed_data = etl.transform(
+                            extracted_data,
+                            {
+                                    'COLUMNS':  '__all__',
+                                    'DISTINCT': False,
+                                    'FILTER':   None,
+                                    'ORDER':    None,
+                                    'LIMIT_OR_TAIL':    ('limit', 10),
+                                }
+                            )
+                           ```
 
+                           **Example 2**
+
+                           ```python
+                            from app import etl
+                            extracted_data = etl.extract("csv", "data_sets/hotel_bookings.csv")
+                            transformed_data = etl.transform(
+                                extracted_data,
+                                {
+                                    "COLUMNS": "__all__",
+                                    "DISTINCT": False,
+                                    "FILTER": {"type": "==", "left": "hotel", "right": "City Hotel"},
+                                    "ORDER": ("arrival_date_year", "ASC"),
+                                    "LIMIT_OR_TAIL": ("limit", 10),
+                                },
+                            )
+                           ```
+
+                           **Example 3**
+
+                           ```python
+                            from app import etl
+                            extracted_data = etl.extract('csv','data_sets/hotel_bookings.csv')
+                            transformed_data = etl.transform(
+                            extracted_data,
+                            {
+                                    'COLUMNS':  [0, 1, 2],
+                                    'DISTINCT': False,
+                                    'FILTER':   None,
+                                    'ORDER':    None,
+                                    'LIMIT_OR_TAIL':    None,
+                                }
+                            )
+                            etl.load(transformed_data,'csv','e.csv')
                            ```
     Returns:
         Union[Success[DataFrame], Failure[str]]:
