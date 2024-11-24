@@ -7,8 +7,7 @@ MainWindow = QtWidgets.QMainWindow()
 ui = Ui_SQLCompiler()
 ui.setupUi(MainWindow)
 
-# Connections
-from app.etl.controllers import compile, execute
-ui.combilebtn.clicked.connect(compile)
-ui.excutebtn.clicked.connect(execute)
-
+# # Connections
+# from app.etl.controllers import compile, execute
+# ui.combilebtn.clicked.connect(compile)
+# ui.excutebtn.clicked.connect(execute)
