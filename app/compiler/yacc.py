@@ -15,7 +15,8 @@ def p_empty(p):
 
 
 def p_error(p):
-    print("Syntax error!")
+    # print("Syntax error!")
+    pass
 
 
 ###########################

@@ -12,8 +12,8 @@ if __name__ == "__main__":
         if type(execution_result) == Success:
             print(execution_result.unwrap())
         else:
-            print(execution_result.unwrap())
+            print(execution_result.unwrap_error())
 
     # to print failure string value
     else:
-        print(compilation_result.unwrap())
+        print(compilation_result.unwrap_error())

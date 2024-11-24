@@ -1,11 +1,14 @@
 from app.compiler import parser
-from returns.result import Success, Failure
+
+# from returns.result import Success, Failure
 from typing import Union
 import traceback
 from pandas import DataFrame
 
+from app.core.result_monad import Failure, Success
 
-def compile_to_python(query: str) -> Union[Success[str], Failure[str]]:
+
+def compile_to_python(query: str) -> Union[Success[str], Failure[str, None]]:
     """
     Compiles a SQL-like query string into corresponding Python code or returns an error string if it fails to parse the query.
 
@@ -19,13 +22,19 @@ def compile_to_python(query: str) -> Union[Success[str], Failure[str]]:
     """
     try:
         # Assuming parser.parse() is some parsing logic for the SQL-like query
-        return Success(str(parser.parse(query)))  # type: ignore
-    except Exception:
+        parsing_result = parser.parse(query)
+        if parsing_result != None:
+            return Success(str(parsing_result))  # type: ignore
+        else:
+            return Failure("Syntax error!")
+    except:
         # Return a Failure monad containing the stack trace in case of an error
         return Failure(traceback.format_exc())
 
 
-def execute_python_code(python_code: str) -> Union[Success[DataFrame], Failure[str]]:
+def execute_python_code(
+    python_code: str,
+) -> Union[Success[DataFrame], Failure[str, None]]:
     """
     Executes the given Python code and returns the resulting transformed data as a `DataFrame`,
     or an error message in case of failure.
@@ -98,5 +107,5 @@ def execute_python_code(python_code: str) -> Union[Success[DataFrame], Failure[s
 
         return Success(transformed_data)
 
-    except Exception:
-        return Failure(traceback.format_exc())
+    except:
+        return Failure(traceback.format_exc(), None)
