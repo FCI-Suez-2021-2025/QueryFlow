@@ -1,9 +1,9 @@
 import pandas as pd
-from app.etl.data_factories import (
+from app.etl.data.data_factories import (
     LoaderDataFactory,
     ExtractorDataFactory,
 )
-from app.etl.data.local.base_data_types import IExtractor, ILoader
+from app.etl.data.base_data_types import IExtractor, ILoader
 from app.etl.helpers import apply_filtering
 
 

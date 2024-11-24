@@ -1,6 +1,6 @@
 from enum import Enum
 from pandas import DataFrame
-from app.etl.data.local.base_data_types import IExtractor, FieldPathBase
+from app.etl.data.base_data_types import IExtractor, FieldPathBase
 from app.etl.data.remote.gee.google_earth_api_data_collector import (
     GoogleEarthAPIDataCollector,
 )
