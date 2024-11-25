@@ -1,7 +1,7 @@
 from app import *
 from app.etl.controllers import *
 
-# for testing the program wihtout ui
+# for testing the program without ui
 if __name__ == "__main__":
 
     query = """
