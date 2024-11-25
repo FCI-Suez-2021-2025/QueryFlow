@@ -5,9 +5,11 @@ from app.etl.controllers import *
 if __name__ == "__main__":
 
     query = """
-        select arrival_date_month
+        select *
         from   [csv:testing_datasets/hotel_bookings.csv]
-        order by arrival_date_month desc; 
+        where  hotel == "Resort Hotel"
+        order by arrival_date_month desc
+        limit  10; 
         """
     compilation_result = compile_to_python(query)
     if type(compilation_result) == Success:
