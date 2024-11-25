@@ -24,6 +24,11 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
     if criteria["FILTER"]:
         data = apply_filtering(data, criteria["FILTER"])
 
+    # ordering
+    if criteria["ORDER"]:
+        column = criteria["ORDER"][0]
+        data = data.sort_values(column, ascending=criteria["ORDER"][1] == "ASC")
+
     # columns
     if criteria["COLUMNS"] != "__all__":
         # data = data.filter(items=criteria["COLUMNS"])
@@ -37,11 +42,6 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
     # distinct
     if criteria["DISTINCT"]:
         data = data.drop_duplicates()
-
-    # ordering
-    if criteria["ORDER"]:
-        column = criteria["ORDER"][0]
-        data = data.sort_values(column, ascending=criteria["ORDER"][1] == "ASC")
 
     # limit
     if criteria["LIMIT_OR_TAIL"] != None:
