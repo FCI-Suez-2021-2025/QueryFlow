@@ -5,9 +5,9 @@ from app.etl.controllers import *
 if __name__ == "__main__":
 
     query = (
-        "select arrival_date_month from [csv:testing_datasets/hotel_bookings.csv] "
+        "select arrival_date_month from [csv:testing_datasets/hotel_bookings.csv]"
         " order by arrival_date_month asc"
-        ";"
+        " ;"
     )
     compilation_result = compile_to_python(query)
     if type(compilation_result) == Success:
