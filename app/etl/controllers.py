@@ -5,10 +5,13 @@ from typing import Union
 import traceback
 from pandas import DataFrame
 
+from app.core.errors import LexerError, ParserError, PythonExecutionError
 from app.core.result_monad import Failure, Success
 
 
-def compile_to_python(query: str) -> Union[Success[str], Failure[str, None]]:
+def compile_to_python(
+    query: str,
+) -> Union[Success[str], Failure[ParserError, None] | Failure[LexerError, None]]:
     """
     Compiles a SQL-like query string into corresponding Python code or returns an error string if it fails to parse the query.
 
@@ -23,10 +26,10 @@ def compile_to_python(query: str) -> Union[Success[str], Failure[str, None]]:
     try:
         # Assuming parser.parse() is some parsing logic for the SQL-like query
         parsing_result = parser.parse(query)
-        if parsing_result != None:
+        if parsing_result:
             return Success(str(parsing_result))  # type: ignore
-        else:
-            return Failure("Syntax error!")
+    except (LexerError, ParserError) as ex:
+        return Failure(ex)
     except:
         # Return a Failure monad containing the stack trace in case of an error
         return Failure(traceback.format_exc())
@@ -34,7 +37,7 @@ def compile_to_python(query: str) -> Union[Success[str], Failure[str, None]]:
 
 def execute_python_code(
     python_code: str,
-) -> Union[Success[DataFrame], Failure[str, None]]:
+) -> Union[Success[DataFrame], Failure[PythonExecutionError, None]]:
     """
     Executes the given Python code and returns the resulting transformed data as a `DataFrame`,
     or an error message in case of failure.
@@ -107,5 +110,15 @@ def execute_python_code(
 
         return Success(transformed_data)
 
-    except:
-        return Failure(traceback.format_exc(), None)
+    except Exception as ex:
+
+        return Failure(
+            PythonExecutionError(
+                message=str(ex),
+                code=python_code,
+                line=None,
+                position=None,
+            ),
+            None,
+        )
+        # return Failure(traceback.format_exc(), None)

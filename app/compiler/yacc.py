@@ -1,3 +1,6 @@
+from app.core.errors import ParserError
+import ply.yacc
+
 start = "start"
 
 
@@ -15,9 +18,17 @@ def p_empty(p):
 
 
 def p_error(p):
-    # print(p)
-    # print("Syntax error!")
-    pass
+    value, line_number, position = p.value, p.lineno, p.lexpos
+    raise ParserError(
+        f"Syntax error at token '{value}' on line {line_number}, position {position}.",
+        p.value,
+        p.lineno,
+        p.lexpos,
+    )
+
+
+# else:
+#         raise ParserError("Syntax error at EOF")
 
 
 ###########################
