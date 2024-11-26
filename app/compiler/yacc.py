@@ -15,6 +15,7 @@ def p_empty(p):
 
 
 def p_error(p):
+    # print(p)
     # print("Syntax error!")
     pass
 
@@ -26,14 +27,12 @@ def p_error(p):
 
 def p_select(p):
     """select : SELECT distinct select_columns FROM DATASOURCE into where order limit_or_tail SIMICOLON"""
-
     if type(p[3]) == str:
         p[3] = "'" + p[3] + "'"
 
     file_type, file_path = p[5].split(":", 1)
     if p[6]:
         load_type, load_path = p[6].split(":", 1)
-
     p[0] = (
         f"from app import etl\n"
         f"\n"
@@ -145,8 +144,8 @@ def p_conditions_not(p):
 
 
 def p_exp(p):
-    """exp : STRING
-    | COLNAME
+    """exp : column
+    | STRING
     | NUMBER"""
 
     p[0] = p[1]
@@ -182,8 +181,15 @@ def p_distinct_empty(p):
 ###########################
 def p_column(p):
     """column : COLNUMBER
-    | COLNAME"""
+    | BRACKETED_COLNAME
+    | SIMPLE_COLNAME"""
     p[0] = p[1]
+
+
+# def p_column_name(p):
+#     """column_name : BRACKETED_COLNAME
+#     | SIMPLE_COLNAME"""
+#     p[0] = p[1]
 
 
 def p_columns(p):
