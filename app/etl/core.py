@@ -1,3 +1,5 @@
+import itertools
+from typing import Callable
 import pandas as pd
 from app.etl.data.data_factories import (
     LoaderDataFactory,
@@ -26,17 +28,28 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
     # ordering
     if criteria["ORDER"]:
-        column = criteria["ORDER"][0]
-        data = data.sort_values(column, ascending=criteria["ORDER"][1] == "ASC")
+        tuple = criteria["ORDER"]
+        column: str = tuple[0]
+        sorting_way: str = tuple[1]
+
+        # to handle if the column is passed by number not buy name
+        if column.startswith("[") and column.endswith("]"):
+            column_number = int(column[1:-1])
+            column = data.columns[column_number]
+        data = data.sort_values(column, ascending=sorting_way == "ASC")
 
     # columns
     if criteria["COLUMNS"] != "__all__":
-        # data = data.filter(items=criteria["COLUMNS"])
+        columns: list[str] = criteria["COLUMNS"]
+        is_column_number: Callable[[str], bool] = lambda x: x.startswith(
+            "["
+        ) and x.endswith("]")
 
         # Separate column names and numbers
-        column_names = [col for col in criteria["COLUMNS"] if isinstance(col, str)]
-        column_numbers = [col for col in criteria["COLUMNS"] if isinstance(col, int)]
-
+        column_numbers = [
+            int(column[1:-1]) for column in columns if is_column_number(column)
+        ]
+        column_names = [column for column in columns if not is_column_number(column)]
         # Select columns
         data = pd.concat([data[column_names], data.iloc[:, column_numbers]], axis=1)
     # distinct

@@ -35,7 +35,9 @@ tokens = [
     "PERCENT",
     "LPAREN",
     "RPAREN",
-    "COLNAME",
+    "SIMPLE_COLNAME",
+    "BRACKETED_COLNAME",
+    "COLNUMBER",
     "DATASOURCE",
     "EQUAL",
     "NOTEQUAL",
@@ -47,7 +49,6 @@ tokens = [
     "COMMA",
     "STRING",
     "PATTERN",
-    "COLNUMBER",
 ] + list(reserved.values())
 
 # Regular expression rules for simple tokens
@@ -73,26 +74,140 @@ t_ignore_COMMENT = r"/\*.*\*/"  # Comment
 
 digit = r"([0-9])"
 nondigit = r"([_A-Za-z])"
-identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
+# the next pattern not enforce full match
+bracketed_identifier = r"\[([_A-Za-z][ _A-Za-z0-9]*)\]"
+simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
+
+
 # the next line is commented to not include [column number]
-# identifier = identifier + r"|" + r"\[" + digit + r"+\]"
+# simple_identifier = simple_identifier + r"|" + r"\[" + digit + r"+\]"
 
 
-@TOKEN(identifier)
-def t_COLNAME(t):
-    t.type = reserved.get(t.value, "COLNAME")  # Check for reserved words
+# region this code to not conflict with SIMPE_COLNAME
+@TOKEN(r"select")
+def t_SELECT(t):
+    return t
+
+
+@TOKEN(r"distinct")
+def t_DISTINCT(t):
+    return t
+
+
+@TOKEN(r"from")
+def t_FROM(t):
+    return t
+
+
+@TOKEN(r"into")
+def t_INTO(t):
+    return t
+
+
+@TOKEN(r"where")
+def t_WHERE(t):
+    return t
+
+
+@TOKEN(r"like")
+def t_LIKE(t):
+    return t
+
+
+@TOKEN(r"not")
+def t_NOT(t):
+    return t
+
+
+@TOKEN(r"and")
+def t_AND(t):
+    return t
+
+
+@TOKEN(r"or")
+def t_OR(t):
+    return t
+
+
+@TOKEN(r"insert")
+def t_INSERT(t):
+    return t
+
+
+@TOKEN(r"values")
+def t_VALUES(t):
+    return t
+
+
+@TOKEN(r"update")
+def t_UPDATE(t):
+    return t
+
+
+@TOKEN(r"set")
+def t_SET(t):
+    return t
+
+
+@TOKEN(r"delete")
+def t_DELETE(t):
+    return t
+
+
+@TOKEN(r"order")
+def t_ORDER(t):
+    return t
+
+
+@TOKEN(r"by")
+def t_BY(t):
+    return t
+
+
+@TOKEN(r"desc")
+def t_DESC(t):
+    return t
+
+
+@TOKEN(r"asc")
+def t_ASC(t):
+    return t
+
+
+@TOKEN(r"limit")
+def t_LIMIT(t):
+    return t
+
+
+@TOKEN(r"tail")
+def t_TAIL(t):
+    return t
+
+
+# endregion
+
+
+@TOKEN(simple_identifier)
+def t_SIMPLE_COLNAME(t):
+    # t.type = reserved.get(t.value, "SIMPLE_COLNAME")  # Check for reserved words
+    return t
+
+
+@TOKEN(bracketed_identifier)
+def t_BRACKETED_COLNAME(t):
+    t.value = t.value[1:-1]
+    return t
+
+
+@TOKEN(r"\[\d+\]")
+def t_COLNUMBER(t):
     return t
 
 
 @TOKEN(r'"([^"\n])*"')
 def t_STRING(t):
     t.value = str(t.value)[1:-1]
-    return t
 
-
-@TOKEN(r"\[\d+\]")
-def t_COLNUMBER(t):
-    t.value = int(t.value[1:-1])
     return t
 
 
@@ -124,7 +239,7 @@ def t_POSITIVE_INTNUMBER(t):
 # endregion
 
 
-@TOKEN(r"\[[^,\]\[]+\]")
+@TOKEN(r"\{[^,{}\[]+\}")
 def t_DATASOURCE(t):
     t.value = str(t.value[1:-1])
     return t
