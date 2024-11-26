@@ -85,7 +85,7 @@ simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 # simple_identifier = simple_identifier + r"|" + r"\[" + digit + r"+\]"
 
 
-# # region this code to not conflict with SIMPE_COLNAME
+# region this code to not conflict with SIMPE_COLNAME
 # @TOKEN(r"select")
 # def t_SELECT(t):
 #     return t
@@ -186,7 +186,7 @@ simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 #     return t
 
 
-# # endregion
+# endregion
 
 
 @TOKEN(simple_identifier)
