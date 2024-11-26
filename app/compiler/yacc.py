@@ -37,13 +37,13 @@ def p_error(p):
 
 
 def p_select(p):
-    """select : SELECT distinct select_columns FROM DATASOURCE into where order limit_or_tail SIMICOLON"""
+    """select : SELECT distinct select_columns into_statement FROM DATASOURCE where order limit_or_tail SIMICOLON"""
     if type(p[3]) == str:
         p[3] = "'" + p[3] + "'"
 
-    file_type, file_path = p[5].split(":", 1)
-    if p[6]:
-        load_type, load_path = p[6].split(":", 1)
+    file_type, file_path = p[6].split(":", 1)
+    if p[4]:
+        load_type, load_path = p[4].split(":", 1)
     p[0] = (
         f"from app import etl\n"
         f"\n"
@@ -59,7 +59,7 @@ def p_select(p):
         f"    }}\n"
         f")\n"
         f""
-        f"{f"etl.load(transformed_data,'{load_type}','{load_path}')" if p[6] else "" }\n"
+        f"{f"etl.load(transformed_data,'{load_type}','{load_path}')" if p[4] else "" }\n"
     )
 
 
@@ -235,13 +235,13 @@ def p_select_columns(p):
 ###########################
 
 
-def p_into(p):
-    "into : INTO DATASOURCE"
+def p_into_statement(p):
+    "into_statement : INTO DATASOURCE"
     p[0] = p[2]
 
 
-def p_into_empty(p):
-    "into : empty"
+def p_into_statement_empty(p):
+    "into_statement : empty"
 
 
 ###########################
