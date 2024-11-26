@@ -1,5 +1,5 @@
-hotel,is_canceled,lead_time,arrival_date_year,arrival_date_month
-at Hotel,0,203,2016,December
+hotel,is canceled,lead time,arrival_date_year,arrival_date_month
+at Hotel,0,2016,2016,December
 City Hotel,1,82,2015,July
 City Hotel,0,25,2016,December
 City Hotel,0,1,2016,March
