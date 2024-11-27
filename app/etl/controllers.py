@@ -17,8 +17,8 @@ def compile_to_python(
 
     Args:
           query (str): The SQL-like query to be compiled. For example:
-            - A successful query: "select * from {csv:data/players.csv} where age > 30;"
-            - A query with an error: "select * from where age > 30"
+            - A successful query: "SELECT * From {csv:data/players.csv} WHERE age > 30;"
+            - A query with an error: "SELECT * From WHERE age > 30"
     Returns:
         Union[Success[str], Failure[str]]: A `Success` monad containing the compiled Python code if parsing is successful,
                                            or a `Failure` monad containing the error string if parsing fails.
