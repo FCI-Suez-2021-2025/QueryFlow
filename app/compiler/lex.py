@@ -2,30 +2,30 @@ from ply.lex import TOKEN
 
 from app.core.errors import LexerError
 
-# To handle reserved words
-reserved = {
-    "select": "SELECT",
-    "from": "FROM",
-    "into": "INTO",
-    "where": "WHERE",
-    "like": "LIKE",
-    "insert": "INSERT",
-    "and": "AND",
-    "order": "ORDER",
-    "or": "OR",
-    "not": "NOT",
-    "distinct": "DISTINCT",
-    "by": "BY",
-    "asc": "ASC",
-    "desc": "DESC",
-    "limit": "LIMIT",
-    "tail": "TAIL",
-    "values": "VALUES",
-    "update": "UPDATE",
-    "set": "SET",
-    "delete": "DELETE",
-}
 
+# To handle reserved words
+reserved = [
+    "SELECT",
+    "FROM",
+    "INTO",
+    "WHERE",
+    "LIKE",
+    "INSERT",
+    "AND",
+    "ORDER",
+    "OR",
+    "NOT",
+    "DISTINCT",
+    "BY",
+    "ASC",
+    "DESC",
+    "LIMIT",
+    "TAIL",
+    "VALUES",
+    "UPDATE",
+    "SET",
+    "DELETE",
+]
 tokens = [
     "FLOATNUMBER",
     "NEGATIVE_INTNUMBER",
@@ -51,8 +51,9 @@ tokens = [
     "COMMA",
     "STRING",
     "PATTERN",
-] + list(reserved.values())
-
+] + reserved
+# t_SELECT=r"select"
+# t_WHERe=
 # Regular expression rules for simple tokens
 t_PLUS = r"\+"
 t_MINUS = r"-"
@@ -86,104 +87,112 @@ simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 
 
 # region this code to not conflict with SIMPE_COLNAME
-# @TOKEN(r"select")
-# def t_SELECT(t):
-#     return t
+@TOKEN(r"select")
+def t_SELECT(t):
+    return t
 
 
-# @TOKEN(r"distinct")
-# def t_DISTINCT(t):
-#     return t
+@TOKEN(r"distinct")
+def t_DISTINCT(t):
+    return t
 
 
-# @TOKEN(r"from")
-# def t_FROM(t):
-#     return t
+@TOKEN(r"from")
+def t_FROM(t):
+    return t
 
 
-# @TOKEN(r"into")
-# def t_INTO(t):
-#     return t
+@TOKEN(r"into")
+def t_INTO(t):
+    return t
 
 
-# @TOKEN(r"order")
-# def t_ORDER(t):
-#     return t
+@TOKEN(r"order")
+def t_ORDER(t):
+    return t
 
 
-# @TOKEN(r"by")
-# def t_BY(t):
-#     return t
+@TOKEN(r"by")
+def t_BY(t):
+    return t
 
 
-# @TOKEN(r"where")
-# def t_WHERE(t):
-#     return t
+@TOKEN(r"where")
+def t_WHERE(t):
+    return t
 
 
-# @TOKEN(r"like")
-# def t_LIKE(t):
-#     return t
+@TOKEN(r"like")
+def t_LIKE(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"not")
-# def t_NOT(t):
-#     return t
+@TOKEN(r"not")
+def t_NOT(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"and")
-# def t_AND(t):
-#     return t
+@TOKEN(r"and")
+def t_AND(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"or")
-# def t_OR(t):
-#     return t
+@TOKEN(r"or")
+def t_OR(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"insert")
-# def t_INSERT(t):
-#     return t
+@TOKEN(r"insert")
+def t_INSERT(t):
+    return t
 
 
-# @TOKEN(r"values")
-# def t_VALUES(t):
-#     return t
+@TOKEN(r"values")
+def t_VALUES(t):
+    return t
 
 
-# @TOKEN(r"update")
-# def t_UPDATE(t):
-#     return t
+@TOKEN(r"update")
+def t_UPDATE(t):
+    return t
 
 
-# @TOKEN(r"set")
-# def t_SET(t):
-#     return t
+@TOKEN(r"set")
+def t_SET(t):
+    return t
 
 
-# @TOKEN(r"delete")
-# def t_DELETE(t):
-#     return t
+@TOKEN(r"delete")
+def t_DELETE(t):
+    return t
 
 
-# @TOKEN(r"desc")
-# def t_DESC(t):
-#     return t
+@TOKEN(r"desc")
+def t_DESC(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"asc")
-# def t_ASC(t):
-#     return t
+@TOKEN(r"asc")
+def t_ASC(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"limit")
-# def t_LIMIT(t):
-#     return t
+@TOKEN(r"limit")
+def t_LIMIT(t):
+    t.value = t.value.lower()
+    return t
 
 
-# @TOKEN(r"tail")
-# def t_TAIL(t):
-#     return t
+@TOKEN(r"tail")
+def t_TAIL(t):
+    t.value = t.value.lower()
+    return t
 
 
 # endregion
@@ -191,8 +200,6 @@ simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 
 @TOKEN(simple_identifier)
 def t_SIMPLE_COLNAME(t):
-    # do not remove this line!
-    t.type = reserved.get(t.value, "SIMPLE_COLNAME")  # Check for reserved words
     return t
 
 

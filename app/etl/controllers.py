@@ -11,14 +11,14 @@ from app.core.result_monad import Failure, Success
 
 def compile_to_python(
     query: str,
-) -> Union[Success[str], Failure[ParserError, None] | Failure[LexerError, None]]:
+) -> Union[Success[str], Failure[ParserError, None], Failure[LexerError, None]]:
     """
     Compiles a SQL-like query string into corresponding Python code or returns an error string if it fails to parse the query.
 
     Args:
           query (str): The SQL-like query to be compiled. For example:
-            - A successful query: "SELECT * FROM [csv:data/players.csv] WHERE age > 30;"
-            - A query with an error: "SELECT * FROM WHERE age > 30"
+            - A successful query: "select * from {csv:data/players.csv} where age > 30;"
+            - A query with an error: "select * from where age > 30"
     Returns:
         Union[Success[str], Failure[str]]: A `Success` monad containing the compiled Python code if parsing is successful,
                                            or a `Failure` monad containing the error string if parsing fails.
@@ -29,7 +29,7 @@ def compile_to_python(
         if parsing_result:
             return Success(str(parsing_result))  # type: ignore
     except (LexerError, ParserError) as ex:
-        return Failure(ex)
+        return Failure(ex, None)
     except:
         # Return a Failure monad containing the stack trace in case of an error
         return Failure(traceback.format_exc())

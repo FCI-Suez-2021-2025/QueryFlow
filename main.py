@@ -5,10 +5,14 @@ from app.etl.controllers import *
 if __name__ == "__main__":
 
     query = r"""
-select hotel,[lead time],[3]
-from {csv:testing_datasets/hotel_bookings.csv} where not ([3]==[2]);"""
+Select hotel,
+       [lead time],
+       [3] into {csv:transformed data.csv}
+FROM {csv:testing_datasets/hotel_bookings.csv}
+Where hotel ==hotel aNd Not [2]==[3] ;"""
     compilation_result = compile_to_python(query)
     if type(compilation_result) == Success:
+
         python_code = compilation_result.unwrap()
         execution_result = execute_python_code(python_code)
         if type(execution_result) == Success:
