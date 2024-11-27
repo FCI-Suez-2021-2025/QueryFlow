@@ -48,7 +48,7 @@ def p_select(p):
         f"from app import etl\n"
         f"\n"
         f"extracted_data = etl.extract('{file_type}','{file_path}')\n"
-        f"transformed_data = etl.transform(\n"
+        f"transformed_data = etl.transform_select(\n"
         f"   extracted_data,\n"
         f"   {{\n"
         f"        'COLUMNS':  {p[3]},\n"
@@ -262,12 +262,12 @@ def p_order_empty(p):
 def p_way_asc(p):
     """way : ASC
     | empty"""
-    p[0] = "ASC"
+    p[0] = "asc"
 
 
 def p_way_desc(p):
     "way : DESC"
-    p[0] = "DESC"
+    p[0] = "desc"
 
 
 ###########################

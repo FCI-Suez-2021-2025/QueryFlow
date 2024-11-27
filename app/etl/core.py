@@ -20,7 +20,7 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
     return data
 
 
-def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
+def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
     # filtering
     if criteria["FILTER"]:
@@ -36,7 +36,7 @@ def transform(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
         if column.startswith("[") and column.endswith("]"):
             column_number = int(column[1:-1])
             column = data.columns[column_number]
-        data = data.sort_values(column, ascending=sorting_way == "ASC")
+        data = data.sort_values(column, ascending=sorting_way == "asc")
 
     # columns
     if criteria["COLUMNS"] != "__all__":
