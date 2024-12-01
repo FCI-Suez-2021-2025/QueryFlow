@@ -6,6 +6,7 @@ from pandas import DataFrame
 
 from app.core.result_monad import Success
 from app.etl.controllers import compile_to_python, execute_python_code
+from app.gui.sql_textbox_colorizer import Colorizer
 
 
 class TabContent(ctk.CTkFrame):
@@ -41,7 +42,15 @@ class TabContent(ctk.CTkFrame):
         self.add_data_frame_result_frame()
 
     def add_children_widget(self):
-        self.sql_textbox = ctk.CTkTextbox(self, height=300, font=("Consolas", 24))
+        self.sql_textbox = ctk.CTkTextbox(
+            self, height=300, fg_color=("#ffffff", "#1e1e1e"), font=("Consolas", 24)
+        )
+        self.sql_textbox.bind(
+            "<KeyRelease>",
+            lambda _: Colorizer.highlight_syntax(
+                self.sql_textbox, ctk.get_appearance_mode().lower()
+            ),
+        )
         # Button Frame (for Execute, Run, Delete, Up, Down buttons)
         self.btn_frame = ctk.CTkFrame(self, height=40, fg_color="transparent")
         # Execute Button
@@ -129,7 +138,7 @@ class TabContent(ctk.CTkFrame):
         self.sql_textbox.delete("1.0", "end")
         # Insert text at the beginning (index "1.0")
         self.sql_textbox.insert("1.0", sql_query)
-
+        Colorizer.highlight_syntax(self.sql_textbox, ctk.get_appearance_mode().lower())
         if not sql_query:
             self.display_result("SQL code is empty.", DataFrame())
             return
@@ -168,7 +177,7 @@ class TabContent(ctk.CTkFrame):
         self.sql_textbox.delete("1.0", "end")
         # Insert text at the beginning (index "1.0")
         self.sql_textbox.insert("1.0", sql_query)
-
+        Colorizer.highlight_syntax(self.sql_textbox, ctk.get_appearance_mode().lower())
         if not sql_query:
             self.display_result("SQL code is empty.", DataFrame())
             return

@@ -9,15 +9,19 @@ if __name__ == "__main__":
     app.mainloop()
 
 #     query = r"""
-# Select hotel,
-#        [lead time],
-#        [3] into {csv:transformed data.csv}
-# FROM {csv:testing_datasets/hotel_bookings.csv}
-# Where hotel ==hotel aNd Not [2]==[3] ;"""
+# Select email,
+# [email 2],
+# [3] into
+# {csv:transformed data.csv}
+# from
+# {csv:testing_datasets/hotel_bookings.csv}
+# Where not [1]=="moas" and email==1
+# limit 10;"""
 #     compilation_result = compile_to_python(query)
 #     if type(compilation_result) == Success:
 
 #         python_code = compilation_result.unwrap()
+#         print(python_code)
 #         execution_result = execute_python_code(python_code)
 #         if type(execution_result) == Success:
 #             print(execution_result.unwrap())
