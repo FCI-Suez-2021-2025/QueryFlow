@@ -11,17 +11,26 @@ from app.core.result_monad import Failure, Success
 
 def compile_to_python(
     query: str,
-) -> Union[Success[str], Failure[ParserError, None], Failure[LexerError, None]]:
+) -> Union[
+    Success[str],
+    Failure[ParserError, None],
+    Failure[LexerError, None],
+    Failure[str, None],
+]:
     """
-    Compiles a SQL-like query string into corresponding Python code or returns an error string if it fails to parse the query.
+    Compiles a SQL-like query string into equivalent Python code or returns an error if parsing fails.
 
     Args:
-          query (str): The SQL-like query to be compiled. For example:
-            - A successful query: "select * from {csv:data/players.csv} where age > 30;"
-            - A query with an error: "select * from where age > 30"
+        query (str): The SQL-like query to be compiled. Examples:
+            - Successful query: "SELECT * FROM {csv:data/players.csv} WHERE age > 30;"
+            - Erroneous query: "SELECT * FROM WHERE age > 30"
+
     Returns:
-        Union[Success[str], Failure[str]]: A `Success` monad containing the compiled Python code if parsing is successful,
-                                           or a `Failure` monad containing the error string if parsing fails.
+        Union[Success[str], Failure[ParserError, None], Failure[LexerError, None], Failure[str, None]]:
+            - Success[str]: Contains the generated Python code if the query is successfully parsed.
+            - Failure[ParserError, None]: Contains a `ParserError` object if parsing the query fails due to syntax issues.
+            - Failure[LexerError, None]: Contains a `LexerError` object if tokenizing the query fails.
+            - Failure[str, None]: Contains a generic error message with the stack trace if an unexpected exception occurs.
     """
     try:
         # Assuming parser.parse() is some parsing logic for the SQL-like query
@@ -40,69 +49,67 @@ def execute_python_code(
 ) -> Union[Success[DataFrame], Failure[PythonExecutionError, None]]:
     """
     Executes the given Python code and returns the resulting transformed data as a `DataFrame`,
-    or an error message in case of failure.
+    or an error message if execution fails.
 
     Args:
-        python_code (str): The Python code to be executed as a string. The code should perform
-                           transformations on data that result in a variable named `transformed_data`
-                           being created, which will be returned as a `DataFrame` on success.
-                           Example of `python_code` argument value:
+        python_code (str): The Python code to be executed. The code should perform data transformations
+                           and create a variable named `transformed_data`, which will be returned as a `DataFrame`.
 
-                           **Example 1**
+                           Examples of valid `python_code`:
+
+                           **Example 1: Basic extraction and transformation**
                            ```python
-                            from app import etl
-
-                            extracted_data= etl.extract('csv','data_sets/hotel_bookings.csv')
-                            transformed_data = etl.transform(
-                            extracted_data,
-                            {
-                                    'COLUMNS':  '__all__',
-                                    'DISTINCT': False,
-                                    'FILTER':   None,
-                                    'ORDER':    None,
-                                    'LIMIT_OR_TAIL':    ('limit', 10),
-                                }
-                            )
+                           from app import etl
+                           extracted_data = etl.extract('csv', 'data_sets/hotel_bookings.csv')
+                           transformed_data = etl.transform(
+                               extracted_data,
+                               {
+                                   'COLUMNS': '__all__',
+                                   'DISTINCT': False,
+                                   'FILTER': None,
+                                   'ORDER': None,
+                                   'LIMIT_OR_TAIL': ('limit', 10),
+                               }
+                           )
                            ```
 
-                           **Example 2**
-
+                           **Example 2: Applying a filter and ordering**
                            ```python
-                            from app import etl
-                            extracted_data = etl.extract("csv", "data_sets/hotel_bookings.csv")
-                            transformed_data = etl.transform(
-                                extracted_data,
-                                {
-                                    "COLUMNS": "__all__",
-                                    "DISTINCT": False,
-                                    "FILTER": {"type": "==", "left": "hotel", "right": "City Hotel"},
-                                    "ORDER": ("arrival_date_year", "ASC"),
-                                    "LIMIT_OR_TAIL": ("limit", 10),
-                                },
-                            )
+                           from app import etl
+                           extracted_data = etl.extract("csv", "data_sets/hotel_bookings.csv")
+                           transformed_data = etl.transform(
+                               extracted_data,
+                               {
+                                   "COLUMNS": "__all__",
+                                   "DISTINCT": False,
+                                   "FILTER": {"type": "==", "left": "hotel", "right": "City Hotel"},
+                                   "ORDER": ("arrival_date_year", "ASC"),
+                                   "LIMIT_OR_TAIL": ("limit", 10),
+                               }
+                           )
                            ```
 
-                           **Example 3**
-
+                           **Example 3: Partial data export**
                            ```python
-                            from app import etl
-                            extracted_data = etl.extract('csv','data_sets/hotel_bookings.csv')
-                            transformed_data = etl.transform(
-                            extracted_data,
-                            {
-                                    'COLUMNS':  [0, 1, 2],
-                                    'DISTINCT': False,
-                                    'FILTER':   None,
-                                    'ORDER':    None,
-                                    'LIMIT_OR_TAIL':    None,
-                                }
-                            )
-                            etl.load(transformed_data,'csv','e.csv')
+                           from app import etl
+                           extracted_data = etl.extract('csv', 'data_sets/hotel_bookings.csv')
+                           transformed_data = etl.transform(
+                               extracted_data,
+                               {
+                                   'COLUMNS': [0, 1, 2],
+                                   'DISTINCT': False,
+                                   'FILTER': None,
+                                   'ORDER': None,
+                                   'LIMIT_OR_TAIL': None,
+                               }
+                           )
+                           etl.load(transformed_data, 'csv', 'e.csv')
                            ```
+
     Returns:
-        Union[Success[DataFrame], Failure[str]]:
-            - A `Success` monad containing a `DataFrame` of the transformed data if the code executes successfully.
-            - A `Failure` monad containing a string with the error message and stack trace if execution fails.
+        Union[Success[DataFrame], Failure[PythonExecutionError, None]]:
+            - Success[DataFrame]: Contains the resulting `DataFrame` if the code executes successfully.
+            - Failure[PythonExecutionError, None]: Contains a `PythonExecutionError` object with details of the error and stack trace if execution fails.
     """
     try:
         exec(python_code)
