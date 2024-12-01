@@ -37,6 +37,7 @@ class TabButton(ctk.CTkFrame):
         self.title = title
         self.index = index
         self.tab_button: ctk.CTkButton = ...
+        self.pack_propagate(False)
         self.add_children_widgets()
 
     def add_children_widgets(self):

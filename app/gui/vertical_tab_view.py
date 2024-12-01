@@ -1,7 +1,8 @@
 from typing import Any, Tuple
 import customtkinter as ctk
 
-from tab_button import TabButton
+from app.gui.content_frame import TabContent
+from app.gui.tab_button import TabButton
 
 
 # Initialize customtkinter
@@ -68,13 +69,14 @@ class VerticalTabView(ctk.CTkFrame):
             self.current_tab_index -= 1
         elif tabs_length > 0 and is_the_current_tab:
             self.current_tab_index = -1
-
             if index == 0:
                 self.show_tab(0)
             elif index == tabs_length:
                 self.show_tab(tabs_length - 1)
             else:
                 self.show_tab(index)
+        elif tabs_length == 0:
+            self.current_tab_index = -1
 
     def add_tab(self, title: str = "New Query Tab"):
         new_tab_button = TabButton(
@@ -97,10 +99,10 @@ class VerticalTabView(ctk.CTkFrame):
             command=lambda: self.move_tab(new_tab_button.index, 1)
         )
         colors = ["green", "black", "yellow", "red"]
-        new_content_frame = ctk.CTkFrame(
+        new_content_frame = TabContent(
             self.content_frame,
-            fg_color=colors[len(self.tabs_buttons) % len(colors)],
-            # fg_color="transparent"
+            # fg_color=colors[len(self.tabs_buttons) % len(colors)],
+            fg_color="transparent",
         )
         new_tab_button.pack(fill="x", pady=5, padx=5)
         new_tab_button.pack_propagate(False)  # Prevent resizing

@@ -1,12 +1,12 @@
+import os
 from app import *
 from app.etl.controllers import *
-from app.gui.ui import SQLCompilerApp
+from app.gui.ui_compiler import UICompiler
 
 # for testing the program without ui
 if __name__ == "__main__":
-    app = SQLCompilerApp()
+    app = UICompiler()
     app.mainloop()
-
 
 #     query = r"""
 # Select hotel,
