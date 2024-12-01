@@ -216,8 +216,7 @@ def t_COLNUMBER(t):
 
 @TOKEN(r'"([^"\n])*"')
 def t_STRING(t):
-    t.value = str(t.value)[1:-1]
-
+    t.value = str(t.value)
     return t
 
 
