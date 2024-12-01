@@ -143,6 +143,8 @@ class VerticalTabView(ctk.CTkFrame):
         new_index = (index + direction) % len(self.tabs_buttons)
         if self.current_tab_index == index:
             self.current_tab_index = new_index
+        elif self.current_tab_index == new_index:
+            self.current_tab_index = index
         button_x: TabButton = self.tabs_buttons[index]
         button_y: TabButton = self.tabs_buttons[new_index]
 
@@ -158,6 +160,7 @@ class VerticalTabView(ctk.CTkFrame):
             self.tabs_contents[new_index],
             self.tabs_contents[index],
         )
+
         # endregion
 
 

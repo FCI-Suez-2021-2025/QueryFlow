@@ -7,7 +7,7 @@ from app.gui.tab_button import TabButton
 
 
 # Initialize customtkinter
-ctk.set_appearance_mode("System")  # Modes: "System" (default), "Dark", "Light"
+ctk.set_appearance_mode("Light")  # Modes: "System" (default), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (default), "green", "dark-blue"
 
 
@@ -18,8 +18,8 @@ class UICompiler(ctk.CTk):
         self.geometry("800x500")
         self.set_window_properties()
         self.add_children_widgets()
-        if ctk.get_appearance_mode() == "Dark":
-            self.theme_switch.select()  # Set initial state to "Dark"
+        # if ctk.get_appearance_mode() == "Dark":
+        #     self.theme_switch.select()  # Set initial state to "Dark"
 
     def add_children_widgets(self) -> None:
         # Create a top frame for controls (buttons and dropdown)
