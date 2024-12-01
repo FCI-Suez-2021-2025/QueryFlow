@@ -2,6 +2,7 @@ from typing import Any, Tuple
 import customtkinter as ctk
 
 from app.gui.content_frame import TabContent
+from app.gui.sql_textbox_colorizer import Colorizer
 from app.gui.tab_button import TabButton
 
 
@@ -40,7 +41,7 @@ class VerticalTabView(ctk.CTkFrame):
         )
 
         self.tabs_buttons = list[TabButton]()
-        self.tabs_contents = list[ctk.CTkFrame]()
+        self.tabs_contents = list[TabContent]()
 
         # Scrollable frame for tabs buttons
         self.tabs_buttons_frame = ctk.CTkScrollableFrame(self, width=350, height=350)
@@ -118,6 +119,10 @@ class VerticalTabView(ctk.CTkFrame):
         self.tabs_contents[index].pack(fill="both", expand=True)
         # Update current tab index
         self.current_tab_index = index
+        Colorizer.highlight_syntax(
+            self.tabs_contents[self.current_tab_index].sql_textbox,
+            ctk.get_appearance_mode().lower(),
+        )
 
     def toggle_tabs(self):
         # Toggle the visibility of the tabs_buttons_frame (collapsing and expanding it)
