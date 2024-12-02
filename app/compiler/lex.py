@@ -1,31 +1,35 @@
 from ply.lex import TOKEN
 
-# To handle reserved words
-reserved = {
-    "select": "SELECT",
-    "from": "FROM",
-    "into": "INTO",
-    "where": "WHERE",
-    "like": "LIKE",
-    "insert": "INSERT",
-    "and": "AND",
-    "or": "OR",
-    "not": "NOT",
-    "distinct": "DISTINCT",
-    "order": "ORDER",
-    "by": "BY",
-    "asc": "ASC",
-    "desc": "DESC",
-    "limit": "LIMIT",
-    "values": "VALUES",
-    "update": "UPDATE",
-    "set": "SET",
-    "delete": "DELETE",
-}
+from app.core.errors import LexerError
 
+
+# To handle reserved words
+reserved = [
+    "SELECT",
+    "FROM",
+    "INTO",
+    "WHERE",
+    "LIKE",
+    "INSERT",
+    "AND",
+    "ORDER",
+    "OR",
+    "NOT",
+    "DISTINCT",
+    "BY",
+    "ASC",
+    "DESC",
+    "LIMIT",
+    "TAIL",
+    "VALUES",
+    "UPDATE",
+    "SET",
+    "DELETE",
+]
 tokens = [
-    "INTNUMBER",
     "FLOATNUMBER",
+    "NEGATIVE_INTNUMBER",
+    "POSITIVE_INTNUMBER",
     "PLUS",
     "MINUS",
     "TIMES",
@@ -33,7 +37,9 @@ tokens = [
     "PERCENT",
     "LPAREN",
     "RPAREN",
-    "COLNAME",
+    "SIMPLE_COLNAME",
+    "BRACKETED_COLNAME",
+    "COLNUMBER",
     "DATASOURCE",
     "EQUAL",
     "NOTEQUAL",
@@ -45,9 +51,9 @@ tokens = [
     "COMMA",
     "STRING",
     "PATTERN",
-    "COLNUMBER",
-] + list(reserved.values())
-
+] + reserved
+# t_SELECT=r"select"
+# t_WHERe=
 # Regular expression rules for simple tokens
 t_PLUS = r"\+"
 t_MINUS = r"-"
@@ -71,50 +77,178 @@ t_ignore_COMMENT = r"/\*.*\*/"  # Comment
 
 digit = r"([0-9])"
 nondigit = r"([_A-Za-z])"
-identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
-identifier = identifier + r"|" + r"\[" + digit + r"+\]"
+# the next pattern not enforce full match
+bracketed_identifier = r"\[([_A-Za-z][ _A-Za-z0-9]*)\]"
+simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 
 
-@TOKEN(identifier)
-def t_COLNAME(t):
-    t.type = reserved.get(t.value, "COLNAME")  # Check for reserved words
+# the next line is commented to not include [column number]
+# simple_identifier = simple_identifier + r"|" + r"\[" + digit + r"+\]"
+
+
+# region this code to not conflict with SIMPE_COLNAME
+@TOKEN(r"select")
+def t_SELECT(t):
     return t
 
 
-@TOKEN(r'"([^"\n])*"')
-def t_STRING(t):
-    t.value = str(t.value)[1:-1]
+@TOKEN(r"distinct")
+def t_DISTINCT(t):
+    return t
+
+
+@TOKEN(r"from")
+def t_FROM(t):
+    return t
+
+
+@TOKEN(r"into")
+def t_INTO(t):
+    return t
+
+
+@TOKEN(r"order")
+def t_ORDER(t):
+    return t
+
+
+@TOKEN(r"by")
+def t_BY(t):
+    return t
+
+
+@TOKEN(r"where")
+def t_WHERE(t):
+    return t
+
+
+@TOKEN(r"like")
+def t_LIKE(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"not")
+def t_NOT(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"and")
+def t_AND(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"or")
+def t_OR(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"insert")
+def t_INSERT(t):
+    return t
+
+
+@TOKEN(r"values")
+def t_VALUES(t):
+    return t
+
+
+@TOKEN(r"update")
+def t_UPDATE(t):
+    return t
+
+
+@TOKEN(r"set")
+def t_SET(t):
+    return t
+
+
+@TOKEN(r"delete")
+def t_DELETE(t):
+    return t
+
+
+@TOKEN(r"desc")
+def t_DESC(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"asc")
+def t_ASC(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"limit")
+def t_LIMIT(t):
+    t.value = t.value.lower()
+    return t
+
+
+@TOKEN(r"tail")
+def t_TAIL(t):
+    t.value = t.value.lower()
+    return t
+
+
+# endregion
+
+
+@TOKEN(simple_identifier)
+def t_SIMPLE_COLNAME(t):
+    return t
+
+
+@TOKEN(bracketed_identifier)
+def t_BRACKETED_COLNAME(t):
+    t.value = t.value[1:-1]
     return t
 
 
 @TOKEN(r"\[\d+\]")
 def t_COLNUMBER(t):
-    t.value = int(t.value[1:-1])
     return t
 
 
-# for only positive integers
-# @TOKEN(r'\d+')
-# for positive and negative integers & integers
-# @TOKEN(r"^[+-]?(\d+(\.\d*)?|\.\d+)$")
-# def t_FLOATNUMBER(t):
-#     t.value = float(t.value)
-#     return t
+@TOKEN(r'"([^"\n])*"')
+def t_STRING(t):
+    t.value = str(t.value)
+    return t
 
 
-@TOKEN(r"^[+-]?\d*\.\d+$")
+# region Numbers RE
+# ! Don't Change the order of these functions due not cause a conflict in the lexer
+
+
+# this will accept any float number except 0 or +0,-0 or ([+ or -] then any seuqence of 0s only)
+@TOKEN(r"[+-]?(?!0(\.0+)?$)(\d+\.\d*|\.\d+)")
 def t_FLOATNUMBER(t):
     t.value = float(t.value)
     return t
 
 
-@TOKEN(r"\d+")
-def t_INTNUMBER(t):
+# this re will exclude 0
+@TOKEN(r"-[1-9]\d*")
+def t_NEGATIVE_INTNUMBER(t):
     t.value = int(t.value)
     return t
 
 
-@TOKEN(r"\[[^,\]\[]+\]")
+# this re will include 0 and + is optional
+@TOKEN(r"\+?\d+")
+def t_POSITIVE_INTNUMBER(t):
+    t.value = int(t.value)
+    return t
+
+
+# endregion
+
+
+@TOKEN(r"\{[^,{}\[]+\}")
 def t_DATASOURCE(t):
     t.value = str(t.value[1:-1])
     return t
@@ -127,5 +261,6 @@ def t_newline(t):
 
 # Error handling rule
 def t_error(t):
-    print(f"Illegal entity {t.value}")
+    value, line_number, position = t.value[0], t.lineno, t.lexpos
     t.lexer.skip(1)
+    raise LexerError(value, line_number, position)

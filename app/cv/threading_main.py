@@ -12,7 +12,7 @@ def read_and_detect(path: str) -> dict[Any, Any]:
     SHARED_Q = Queue()
     res = dict[Any, Any]()
     birdsCascade = cv2.CascadeClassifier(
-        "F:\Collage\\4th year\Compilers Project\project\\app\cv\\birds1.xml"
+        "F:/Collage/4th year/Compilers Project/project/app/cv/birds1.xml"
     )
     reader = VideoReader(path=path, sentinel=SENTINEL, queue=SHARED_Q)
 

@@ -3,7 +3,7 @@ from enum import Enum
 from typing import override
 
 import pandas as pd
-from app.etl.data.local.base_data_types import (
+from app.etl.data.base_data_types import (
     FieldPathBase,
     IExtractor,
     ILoader,
@@ -81,8 +81,8 @@ class HTMLFlatData(IFlatData):
 
     @override
     def extract(self) -> pd.DataFrame:
-        # ! pd.read_html scan html file and returns all table as list[pd.DataFrame] so i will only return the first table
-        return pd.read_html(self.path)[0]
+        file_path, table_number = self.path.split("|", 1)
+        return pd.read_html(file_path)[table_number - 1]
 
     @override
     def load(self, data: pd.DataFrame) -> None:

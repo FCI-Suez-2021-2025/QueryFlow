@@ -1,3 +1,6 @@
+from app.core.errors import ParserError
+import ply.yacc
+
 start = "start"
 
 
@@ -15,7 +18,17 @@ def p_empty(p):
 
 
 def p_error(p):
-    print("Syntax error!")
+    value, line_number, position = p.value, p.lineno, p.lexpos
+    raise ParserError(
+        f"Syntax error at token '{value}' on line {line_number}, position {position}.",
+        p.value,
+        p.lineno,
+        p.lexpos,
+    )
+
+
+# else:
+#         raise ParserError("Syntax error at EOF")
 
 
 ###########################
@@ -24,31 +37,29 @@ def p_error(p):
 
 
 def p_select(p):
-    "select : SELECT distinct select_columns FROM DATASOURCE into where order limit SIMICOLON"
-
+    """select : SELECT distinct select_columns into_statement FROM DATASOURCE where order limit_or_tail SIMICOLON"""
     if type(p[3]) == str:
         p[3] = "'" + p[3] + "'"
 
-    file_type, file_path = p[5].split(":", 1)
-    if p[6]:
-        p[6] = str(p[6]).replace("\\", "\\\\")
-        load_type, load_path = p[6].split(":", 1)
+    file_type, file_path = p[6].split(":", 1)
+    if p[4]:
+        load_type, load_path = p[4].split(":", 1)
     p[0] = (
         f"from app import etl\n"
         f"\n"
-        f"data = etl.extract('{file_type}','{file_path}')\n"
-        f"data = etl.transform(\n"
-        f"   data,\n"
+        f"extracted_data = etl.extract('{file_type}','{file_path}')\n"
+        f"transformed_data = etl.transform_select(\n"
+        f"   extracted_data,\n"
         f"   {{\n"
         f"        'COLUMNS':  {p[3]},\n"
         f"        'DISTINCT': {p[2]},\n"
         f"        'FILTER':   {p[7]},\n"
         f"        'ORDER':    {p[8]},\n"
-        f"        'LIMIT':    {p[9]},\n"
+        f"        'LIMIT_OR_TAIL':    {p[9]},\n"
         f"    }}\n"
         f")\n"
         f""
-        f"{"etl.load(data, '{load_path}','{load_type}')" if p[6] else "" }\n"
+        f"{f"etl.load(transformed_data,'{load_type}','{load_path}')" if p[4] else "" }\n"
     )
 
 
@@ -144,10 +155,20 @@ def p_conditions_not(p):
 
 
 def p_exp(p):
-    """exp : STRING
-    | COLNAME
-    | FLOATNUMBER
-    | INTNUMBER"""
+    """exp : column
+    | STRING
+    | NUMBER"""
+
+    p[0] = p[1]
+
+
+##########################
+# ========== EXP ==========
+##########################
+def p_NUMBER(p):
+    """NUMBER : NEGATIVE_INTNUMBER
+    | POSITIVE_INTNUMBER
+    | FLOATNUMBER"""
     p[0] = p[1]
 
 
@@ -171,8 +192,15 @@ def p_distinct_empty(p):
 ###########################
 def p_column(p):
     """column : COLNUMBER
-    | COLNAME"""
+    | BRACKETED_COLNAME
+    | SIMPLE_COLNAME"""
     p[0] = p[1]
+
+
+# def p_column_name(p):
+#     """column_name : BRACKETED_COLNAME
+#     | SIMPLE_COLNAME"""
+#     p[0] = p[1]
 
 
 def p_columns(p):
@@ -207,13 +235,13 @@ def p_select_columns(p):
 ###########################
 
 
-def p_into(p):
-    "into : INTO DATASOURCE"
+def p_into_statement(p):
+    "into_statement : INTO DATASOURCE"
     p[0] = p[2]
 
 
-def p_into_empty(p):
-    "into : empty"
+def p_into_statement_empty(p):
+    "into_statement : empty"
 
 
 ###########################
@@ -221,7 +249,7 @@ def p_into_empty(p):
 ###########################
 
 
-def p_order_by(p):
+def p_order(p):
     """order : ORDER BY column way"""
     p[0] = (p[3], p[4])
 
@@ -234,29 +262,27 @@ def p_order_empty(p):
 def p_way_asc(p):
     """way : ASC
     | empty"""
-    p[0] = "ASC"
+    p[0] = "asc"
 
 
 def p_way_desc(p):
     "way : DESC"
-    p[0] = "DESC"
+    p[0] = "desc"
 
 
 ###########################
-# ========= Limit ==========
+# ========= Limit & Tail ==========
 ###########################
 
 
-def p_limit(p):
-    """limit : LIMIT INTNUMBER"""
-    if p[2] < 0:
-        p[0] = None
-    else:
-        p[0] = p[2]
+def p_limit_or_tail(p):
+    """limit_or_tail : LIMIT POSITIVE_INTNUMBER
+    | TAIL POSITIVE_INTNUMBER"""
+    p[0] = (p[1], p[2])
 
 
-def p_limit_empty(p):
-    "limit : empty"
+def p_limit_or_tail_empty(p):
+    """limit_or_tail : empty"""
     p[0] = None
 
 
@@ -267,7 +293,8 @@ def p_limit_empty(p):
 
 def p_value(p):
     """value : STRING
-    | FLOATNUMBER"""
+    | NUMBER"""
+
     p[0] = p[1]
 
 

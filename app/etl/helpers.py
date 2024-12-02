@@ -25,28 +25,31 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
             data = pd.merge(left, right)
         return data[~data.index.duplicated(keep="first")]
 
-    left_operand = filters_expressions_tree["left"]
+    left_operand: str = filters_expressions_tree["left"]
 
     right_operand = filters_expressions_tree["right"]
-    print(type(right_operand))
-    if (
-        type(right_operand) == str
-        and right_operand[0] == '"'
-        and right_operand[-1] == '"'
-    ):
-        right_operand: str = right_operand[1:-1]
-
-    elif right_operand in data.columns:
-        right_operand: pd.DataFrame = data[right_operand]
+    # region get the value in the right operand and check if it is a int or float or string or its a column passed by name or number
+    if type(right_operand) == str:
+        if right_operand.startswith('"') and right_operand.endswith('"'):
+            right_operand: str = right_operand[1:-1]
+        elif right_operand.startswith("[") and right_operand.endswith("]"):
+            column_number = int(right_operand[1:-1])
+            right_operand: pd.DataFrame = data[data.columns[column_number]]
+        else:
+            right_operand: pd.DataFrame = data[right_operand]
+    # endregion
+    # get the column in the left operand and check if its passed by name or number
+    if left_operand.startswith("[") and left_operand.endswith("]"):
+        column_number = int(left_operand[1:-1])
+        left_operand = data[data.columns[column_number]]
+    else:
+        left_operand = data[left_operand]
 
     if operator == "like":
         return data[
-            [
-                True if re.match(right_operand, str(x)) else False
-                for x in data[left_operand]
-            ]
+            [True if re.match(right_operand, str(x)) else False for x in left_operand]
         ]
-    left_operand = data[left_operand]
+
     if operator == ">":
         return data[left_operand > right_operand]
     if operator == ">=":
@@ -80,8 +83,3 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
 #         return 'XML'
 #     elif re.search( r'(.+\.xlsx)| (.+\.xls) | (.+\.xlsm)| (.+\.xlsb)| (.+\.odf)| (.+\.ods)| (.+\.odt)', data_source):
 #         return 'EXCEL'
-
-# def __get_source_type_forward(data_source:str) -> str:
-#     ds_type,ds_path =data_source.split(":",1)
-#     print(ds_type,ds_path)
-#     return 'CSV'
