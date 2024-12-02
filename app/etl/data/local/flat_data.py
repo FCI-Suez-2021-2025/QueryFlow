@@ -72,7 +72,9 @@ class XMLFlatData(IFlatData):
 
     @override
     def load(self, data: pd.DataFrame) -> None:
-        return data.to_xml(self.path)
+        # replace spaces in column names with underscore when loading data into a xml file
+        # because  XML tags cannot contain spaces.
+        return data.rename(columns=lambda x: x.replace(" ", "_")).to_xml(self.path)
 
 
 class HTMLFlatData(IFlatData):
