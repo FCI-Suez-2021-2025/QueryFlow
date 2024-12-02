@@ -1,6 +1,7 @@
 from abc import ABC
 from enum import Enum
-from typing import override
+import re
+from typing import Any, override
 
 import pandas as pd
 from app.etl.data.base_data_types import (
@@ -72,11 +73,33 @@ class XMLFlatData(IFlatData):
 
     @override
     def load(self, data: pd.DataFrame) -> None:
-        # Replace spaces in string column names with underscores before loading data into XML file,
-        # as XML tags cannot contain spaces.
-        return data.rename(
-            columns=lambda col: col.replace(" ", "_") if isinstance(col, str) else col
-        ).to_xml(self.path)
+        def __sanitize_xml_tag_name(column_name: Any) -> str:
+            tag_name = str(column_name)
+
+            # handle empty column name
+            if not tag_name:
+                return "_"
+
+            # Replace spaces with underscores
+            tag_name = tag_name.replace(" ", "_")
+
+            # Ensure it doesn't start with a number
+            if tag_name[0].isdigit():
+                tag_name = "_" + tag_name  # Prepend an underscore
+
+            # Remove invalid characters (punctuation, special characters)
+            tag_name = re.sub(r"[^A-Za-z0-9_-]", "", tag_name)
+
+            # if tag_name becomes empty after removing invalid characters
+            if not tag_name:
+                return "_"
+            # Handle colons (used only in namespaces)
+            if ":" in tag_name:
+                tag_name = tag_name.replace(":", "_")
+
+            return tag_name
+
+        return data.rename(columns=__sanitize_xml_tag_name).to_xml(self.path)
 
 
 class HTMLFlatData(IFlatData):
