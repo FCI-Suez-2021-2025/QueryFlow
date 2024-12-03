@@ -1,4 +1,3 @@
-import os
 from app import *
 from app.etl.controllers import *
 from app.gui.ui_compiler import UICompiler

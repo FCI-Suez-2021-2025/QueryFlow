@@ -1,9 +1,9 @@
 from typing import Any, Tuple
 import customtkinter as ctk
 
-from app.gui.content_frame import TabContent
-from app.gui.sql_textbox_colorizer import Colorizer
-from app.gui.tab_button import TabButton
+from app.gui.vertical_tab_view.content_frame import TabContent
+from app.gui.vertical_tab_view.sql_textbox_colorizer import Colorizer
+from app.gui.vertical_tab_view.tab_button import TabButton
 
 
 # Initialize customtkinter
@@ -123,6 +123,9 @@ class VerticalTabView(ctk.CTkFrame):
             self.tabs_contents[self.current_tab_index].sql_textbox,
             ctk.get_appearance_mode().lower(),
         )
+        self.tabs_contents[
+            self.current_tab_index
+        ].results_section.table_section.table.change_theme()
 
     def toggle_tabs(self):
         # Toggle the visibility of the tabs_buttons_frame (collapsing and expanding it)
