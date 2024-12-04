@@ -3,7 +3,7 @@ from PIL.ImageTk import PhotoImage
 import customtkinter as ctk
 
 from app.gui.vertical_tab_view.vertical_tab_view import VerticalTabView
-from app.gui.vertical_tab_view.sql_textbox_colorizer import Colorizer
+
 
 # Initialize customtkinter
 ctk.set_appearance_mode("Light")  # Modes: "System" (default), "Dark", "Light"
@@ -17,20 +17,17 @@ class UICompiler(ctk.CTk):
         self.geometry("800x500")
         self.set_window_properties()
         self.add_children_widgets()
-        # if ctk.get_appearance_mode() == "Dark":
-        #     self.theme_switch.select()  # Set initial state to "Dark"
 
     def update_widgets_manual_theme(self):
-        mode = "dark" if self.theme_switch.get() == 1 else "light"
         if self.vertical_tab_view.current_tab_index == -1:
             return
-        sql_textbox = self.vertical_tab_view.tabs_contents[
+        mode = "dark" if self.theme_switch.get() == 1 else "light"
+
+        current_tab_content = self.vertical_tab_view.tabs_contents[
             self.vertical_tab_view.current_tab_index
-        ].sql_textbox
-        Colorizer.highlight_syntax(sql_textbox, mode)
-        self.vertical_tab_view.tabs_contents[
-            self.vertical_tab_view.current_tab_index
-        ].results_section.table_section.table.change_theme()
+        ]
+        current_tab_content.change_sql_textbox_theme(mode)
+        current_tab_content.results_section.table_section.change_table_theme(mode)
 
     def add_children_widgets(self) -> None:
         # Create a top frame for controls (buttons and dropdown)
