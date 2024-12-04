@@ -3,6 +3,7 @@ import customtkinter as ctk
 from pandas import DataFrame
 
 from app.gui.results_frame.table_result_frame.table_widget import TableWidget
+from app.gui.visualization import visualize
 
 
 class TableResultFrame(ctk.CTkFrame):
@@ -43,7 +44,7 @@ class TableResultFrame(ctk.CTkFrame):
         self.visualize_button = ctk.CTkButton(
             self,
             text="Show Visualization",
-            command=None,  # No functionality yet
+            command=lambda: visualize(self, self.get_table()),  # No functionality yet
             width=150,
         )
         # self.data_frame_textbox.configure(state="disabled")  # Make read-only
