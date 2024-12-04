@@ -49,13 +49,3 @@ class TableWidget(ctk.CTkFrame):
     def reset_data(self) -> None:
         self.data = DataFrame()
         self.sheet.reset()
-
-    def change_theme(self, theme: str = None) -> None:
-        if theme == None:
-            current_theme = ctk.get_appearance_mode()
-            if current_theme == "Dark":
-                self.sheet.change_theme("dark blue")
-            else:
-                self.sheet.change_theme("light blue")
-        else:
-            self.sheet.change_theme(theme.lower() + " blue")

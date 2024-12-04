@@ -41,6 +41,12 @@ class TabContent(ctk.CTkFrame):
         )
         self.add_children_widget()
 
+        self.sql_textbox_theme = ctk.get_appearance_mode().lower()
+        if self.sql_textbox_theme == "dark":
+            self.change_sql_textbox_theme("dark")
+        else:
+            self.sql_textbox_theme = "light"
+
     def add_children_widget(self):
         self.sql_textbox = ctk.CTkTextbox(
             self, fg_color=("#ffffff", "#1e1e1e"), font=("Consolas", 24)
@@ -48,7 +54,7 @@ class TabContent(ctk.CTkFrame):
         self.sql_textbox.bind(
             "<KeyRelease>",
             lambda _: Colorizer.highlight_syntax(
-                self.sql_textbox, ctk.get_appearance_mode().lower()
+                self.sql_textbox, self.sql_textbox_theme
             ),
         )
         # Button Frame (for Execute, Run, Delete, Up, Down buttons)
@@ -117,7 +123,7 @@ class TabContent(ctk.CTkFrame):
         self.sql_textbox.delete("1.0", "end")
         # Insert text at the beginning (index "1.0")
         self.sql_textbox.insert("1.0", sql_query)
-        Colorizer.highlight_syntax(self.sql_textbox, ctk.get_appearance_mode().lower())
+        Colorizer.highlight_syntax(self.sql_textbox, self.sql_textbox_theme)
         if not sql_query:
             self.results_section.python_section.clear_code()
             self.results_section.table_section.clear_table()
@@ -144,3 +150,7 @@ class TabContent(ctk.CTkFrame):
         self.clipboard_clear()
         self.clipboard_append(text)
         self.update()
+
+    def change_sql_textbox_theme(self, theme: str) -> None:
+        self.sql_textbox_theme = theme
+        Colorizer.highlight_syntax(self.sql_textbox, theme)

@@ -48,11 +48,15 @@ class TableResultFrame(ctk.CTkFrame):
             width=150,
         )
         # self.data_frame_textbox.configure(state="disabled")  # Make read-only
-
+        self.table_theme = ""
         self.label.pack(pady=5)
         self.table.pack(fill="both", expand=True, padx=5)
         self.table.pack_propagate(False)
         self.visualize_button.pack(pady=5)
+        if ctk.get_appearance_mode().lower() == "dark":
+            self.change_table_theme("dark")
+        else:
+            self.table_theme = "light"
 
     def set_table(self, data_frame: DataFrame) -> None:
         self.table.set_data(data_frame)
@@ -62,3 +66,7 @@ class TableResultFrame(ctk.CTkFrame):
 
     def clear_table(self) -> None:
         self.table.reset_data()
+
+    def change_table_theme(self, theme: str) -> None:
+        self.table_theme = theme
+        self.table.sheet.change_theme(theme.lower() + " blue")
