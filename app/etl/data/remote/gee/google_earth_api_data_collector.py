@@ -1,6 +1,6 @@
 import ee
 import pandas as pd
-from data_processor import DataProcessor
+from app.etl.data.remote.gee.data_processor import DataProcessor
 
 
 class GoogleEarthAPIDataCollector:
