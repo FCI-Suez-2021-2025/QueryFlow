@@ -3,7 +3,7 @@ import customtkinter as ctk
 from pandas import DataFrame
 
 from app.gui.results_frame.table_result_frame.table_widget import TableWidget
-from app.gui.visualization import visualize
+from app.gui.results_frame.table_result_frame.visualization import visualize
 
 
 class TableResultFrame(ctk.CTkFrame):
