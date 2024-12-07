@@ -1,8 +1,9 @@
-from tkinter import Toplevel, filedialog
+from tkinter import filedialog
 import customtkinter as ctk
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from pandas import DataFrame
 import seaborn as sns
 
 from app.gui.results_frame.table_result_frame.multi_selection_dropdown import (
@@ -11,7 +12,7 @@ from app.gui.results_frame.table_result_frame.multi_selection_dropdown import (
 
 
 class DataVisualizer:
-    def __init__(self, master_widget, data_frame):
+    def __init__(self, master_widget, data_frame: DataFrame):
         self.master = master_widget
         self.data_frame = data_frame
         self.current_figure = {"fig": None, "canvas": None}
@@ -22,7 +23,7 @@ class DataVisualizer:
             return
 
         # Create a new pop-up window
-        self.popup = Toplevel(self.master)
+        self.popup = ctk.CTkToplevel(self.master)
         self.popup.title("Select Visualization Options")
         self.popup.geometry("600x700")
 
