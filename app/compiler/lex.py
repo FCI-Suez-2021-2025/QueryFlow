@@ -13,6 +13,7 @@ reserved = [
     "INSERT",
     "AND",
     "ORDER",
+    "GROUP",
     "OR",
     "NOT",
     "DISTINCT",
@@ -51,9 +52,9 @@ tokens = [
     "COMMA",
     "STRING",
     "PATTERN",
+    "AGGREGATION_FUNCTION",
 ] + reserved
-# t_SELECT=r"select"
-# t_WHERe=
+
 # Regular expression rules for simple tokens
 t_PLUS = r"\+"
 t_MINUS = r"-"
@@ -81,6 +82,29 @@ nondigit = r"([_A-Za-z])"
 bracketed_identifier = r"\[([_A-Za-z][ _A-Za-z0-9]*)\]"
 simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
 
+agg_functions = [
+    "sum",  # Sum of values
+    "mean",  # Average (mean) of values
+    "median",  # Median of values
+    "min",  # Minimum value
+    "max",  # Maximum value
+    "count",  # Count of non-null values
+    "nunique",  # Number of unique values
+    "std",  # Standard deviation
+    "var",  # Variance of values
+    "first",  # First value in the group
+    "last",  # Last value in the group
+    "prod",  # Product of values
+    "sem",  # Standard error of the mean
+    "describe",  # Summary statistics
+    "size",  # Size of the group
+    "quantile",  # Quantile (requires a parameter, e.g., q=0.25)
+]
+aggregation_re = (
+    f"({"|".join(agg_functions)})"
+    + r"\s*\(\s*(\[\d+\]|\[[_A-Za-z][ _A-Za-z0-9]*\]|([_A-Za-z])(([0-9])|([_A-Za-z]))*)\s*\)"
+)
+
 
 # the next line is commented to not include [column number]
 # simple_identifier = simple_identifier + r"|" + r"\[" + digit + r"+\]"
@@ -104,6 +128,19 @@ def t_FROM(t):
 
 @TOKEN(r"into")
 def t_INTO(t):
+    return t
+
+
+@TOKEN(r"group")
+def t_GROUP(t):
+    print(t)
+    return t
+
+
+@TOKEN(aggregation_re)
+def t_AGGREGATION_FUNCTION(t):
+    print(t)
+    t.value = t.value.lower()
     return t
 
 

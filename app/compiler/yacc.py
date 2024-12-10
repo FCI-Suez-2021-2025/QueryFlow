@@ -1,5 +1,5 @@
 from app.core.errors import ParserError
-import ply.yacc
+
 
 start = "start"
 
