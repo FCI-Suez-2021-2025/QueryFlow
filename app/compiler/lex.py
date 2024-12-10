@@ -100,10 +100,8 @@ agg_functions = [
     "size",  # Size of the group
     "quantile",  # Quantile (requires a parameter, e.g., q=0.25)
 ]
-aggregation_re = (
-    f"({"|".join(agg_functions)})"
-    + r"\s*\(\s*(\[\d+\]|\[[_A-Za-z][ _A-Za-z0-9]*\]|([_A-Za-z])(([0-9])|([_A-Za-z]))*)\s*\)"
-)
+aggregation_re = r"\b(?:(?![\{\[])(?:" + "|".join(agg_functions) + r")\b(?![\}\]]))"
+# r"\b(?:" + "|".join(agg_functions) + r")\b"
 
 
 # the next line is commented to not include [column number]
@@ -133,13 +131,11 @@ def t_INTO(t):
 
 @TOKEN(r"group")
 def t_GROUP(t):
-    print(t)
     return t
 
 
 @TOKEN(aggregation_re)
 def t_AGGREGATION_FUNCTION(t):
-    print(t)
     t.value = t.value.lower()
     return t
 

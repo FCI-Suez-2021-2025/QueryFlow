@@ -37,7 +37,7 @@ def p_error(p):
 
 
 def p_select(p):
-    """select : SELECT distinct select_columns into_statement FROM DATASOURCE where order limit_or_tail SIMICOLON"""
+    """select : SELECT distinct select_columns into_statement FROM DATASOURCE where group order limit_or_tail SIMICOLON"""
     if type(p[3]) == str:
         p[3] = "'" + p[3] + "'"
 
@@ -54,8 +54,9 @@ def p_select(p):
         f"        'COLUMNS':  {p[3]},\n"
         f"        'DISTINCT': {p[2]},\n"
         f"        'FILTER':   {p[7]},\n"
-        f"        'ORDER':    {p[8]},\n"
-        f"        'LIMIT_OR_TAIL':    {p[9]},\n"
+        f"        'GROUP':    {p[8]},\n"
+        f"        'ORDER':    {p[9]},\n"
+        f"        'LIMIT_OR_TAIL':    {p[10]},\n"
         f"    }}\n"
         f")\n"
         f""
@@ -211,8 +212,22 @@ def p_columns(p):
 
 
 def p_columns_base(p):
-    """columns : column"""
+    """columns : column
+    | aggregation_function"""
     p[0] = [p[1]]
+
+
+def p_aggregation_function(p):
+    """aggregation_function : AGGREGATION_FUNCTION LPAREN column RPAREN
+    | AGGREGATION_FUNCTION LPAREN TIMES RPAREN"""
+    p[0] = (p[1], p[3])
+    if p[3] == "*" and p[1] != "size":
+        raise ParserError(
+            f"Syntax error: You cannot use * with aggregation functions except SIZE(*)",
+            "*",
+            -1,
+            -1,
+        )
 
 
 ###########################
@@ -245,12 +260,26 @@ def p_into_statement_empty(p):
 
 
 ###########################
+# ======= Group by =========
+###########################
+def p_group(p):
+    """group : GROUP BY icolumns"""
+    p[0] = p[3]
+
+
+def p_group_empty(p):
+    """group : empty"""
+    p[0] = None
+
+
+###########################
 # ======= Order by =========
 ###########################
 
 
 def p_order(p):
-    """order : ORDER BY column way"""
+    """order : ORDER BY column way
+    | ORDER BY aggregation_function way"""
     p[0] = (p[3], p[4])
 
 
@@ -338,13 +367,25 @@ def p_insert_values_end(p):
 
 
 def p_icolumn(p):
-    "icolumn : LPAREN columns RPAREN"
+    "icolumn : LPAREN icolumns RPAREN"
     p[0] = p[2]
 
 
 def p_icolumn_empty(p):
     "icolumn : empty"
     p[0] = None
+
+
+def p_icolumns(p):
+    """icolumns : icolumns COMMA icolumns"""
+    p[0] = []
+    p[0].extend(p[1])
+    p[0].extend(p[3])
+
+
+def p_icolumns_base(p):
+    """icolumns : column"""
+    p[0] = [p[1]]
 
 
 ###########################
