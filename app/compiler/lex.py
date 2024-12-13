@@ -96,7 +96,6 @@ agg_functions = [
     "last",  # Last value in the group
     "prod",  # Product of values
     "sem",  # Standard error of the mean
-    "describe",  # Summary statistics
     "size",  # Size of the group
     "quantile",  # Quantile (requires a parameter, e.g., q=0.25)
 ]

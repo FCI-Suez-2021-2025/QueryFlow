@@ -1,12 +1,15 @@
 import itertools
-from typing import Callable
+from typing import Any, Callable, Tuple
 import pandas as pd
 from app.etl.data.data_factories import (
     LoaderDataFactory,
     ExtractorDataFactory,
 )
 from app.etl.data.base_data_types import IExtractor, ILoader
-from app.etl.helpers import apply_filtering
+from app.etl.helpers import (
+    apply_filtering,
+    generate_aggregation_row,
+)
 
 
 transformed_data = None
@@ -20,39 +23,82 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
     return data
 
 
+def get_unique(items: list) -> list:
+    unique_list = []
+    seen = set()
+
+    for item in items:
+        if item not in seen:
+            unique_list.append(item)
+            seen.add(item)
+    return unique_list
+
+
 def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
     # filtering
     if criteria["FILTER"]:
         data = apply_filtering(data, criteria["FILTER"])
+    if not criteria["GROUP"]:
+        # ordering
+        if criteria["ORDER"]:
+            tuple_order = criteria["ORDER"]
+            column: str = tuple_order[0]
+            sorting_way: str = tuple_order[1]
 
-    # ordering
-    if criteria["ORDER"]:
-        tuple = criteria["ORDER"]
-        column: str = tuple[0]
-        sorting_way: str = tuple[1]
-
-        # to handle if the column is passed by number not buy name
-        if column.startswith("[") and column.endswith("]"):
-            column_number = int(column[1:-1])
-            column = data.columns[column_number]
-        data = data.sort_values(column, ascending=sorting_way == "asc")
-
-    # columns
-    if criteria["COLUMNS"] != "__all__":
-        columns: list[str] = criteria["COLUMNS"]
+            # to handle if the column is passed by number not buy name
+            if column.startswith("[") and column.endswith("]"):
+                column_number = int(column[1:-1])
+                column = data.columns[column_number]
+            data = data.sort_values(column, ascending=sorting_way == "asc")
+    if criteria["GROUP"]:
         is_column_number: Callable[[str], bool] = lambda x: x.startswith(
             "["
         ) and x.endswith("]")
+        group_by_column_names = get_unique(
+            list(
+                map(
+                    lambda column: (
+                        data.columns[int(column[1:-1])]
+                        if is_column_number(column)
+                        else column
+                    ),
+                    criteria["GROUP"],
+                )
+            )
+        )
+    else:
+        if criteria["COLUMNS"] != "__all__":
+            columns: list[str | Tuple] = criteria["COLUMNS"]
+            is_column_number: Callable[[str], bool] = lambda x: x.startswith(
+                "["
+            ) and x.endswith("]")
+            # if all the select columns are aggregation functions
+            if all(type(item) == tuple for item in columns):
+                # list of tuples each tuple is (aggregation,colum name)
+                aggregate_columns: list[Tuple[str | Any]] = [
+                    (
+                        (tuple[0], data.columns[int(tuple[1][1:-1])])
+                        if is_column_number(tuple[1])
+                        else tuple
+                    )
+                    for tuple in columns
+                ]
 
-        # get column names from column number
-        column_names = [
-            data.columns[int(column[1:-1])] if is_column_number(column) else column
-            for column in columns
-        ]
+                data = generate_aggregation_row(data, aggregate_columns)
 
-        # Select columns
-        data = data[column_names]
+            else:  # assuming that select columns don't contain any aggregate
+                column_names = [
+                    (
+                        data.columns[int(column[1:-1])]
+                        if is_column_number(column)
+                        else column
+                    )
+                    for column in columns
+                ]
+
+                # Select columns
+                data = data[column_names]
     # distinct
     if criteria["DISTINCT"]:
         data = data.drop_duplicates()
