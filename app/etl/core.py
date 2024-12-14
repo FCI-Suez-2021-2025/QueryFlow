@@ -8,7 +8,12 @@ from app.etl.data.data_factories import (
 from app.etl.data.base_data_types import IExtractor, ILoader
 from app.etl.helpers import (
     apply_filtering,
+    apply_groupby,
+    check_if_column_names_is_in_group_by,
+    convert_select_column_indices_to_name,
     generate_aggregation_row,
+    get_unique,
+    group_by_columns_names,
 )
 
 
@@ -21,17 +26,6 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
     )
     data: pd.DataFrame = data_extractor.extract()
     return data
-
-
-def get_unique(items: list) -> list:
-    unique_list = []
-    seen = set()
-
-    for item in items:
-        if item not in seen:
-            unique_list.append(item)
-            seen.add(item)
-    return unique_list
 
 
 def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
@@ -52,21 +46,14 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
                 column = data.columns[column_number]
             data = data.sort_values(column, ascending=sorting_way == "asc")
     if criteria["GROUP"]:
-        is_column_number: Callable[[str], bool] = lambda x: x.startswith(
-            "["
-        ) and x.endswith("]")
-        group_by_column_names = get_unique(
-            list(
-                map(
-                    lambda column: (
-                        data.columns[int(column[1:-1])]
-                        if is_column_number(column)
-                        else column
-                    ),
-                    criteria["GROUP"],
-                )
-            )
+        groupby_columns = get_unique(group_by_columns_names(data, criteria["GROUP"]))
+        select_columns = convert_select_column_indices_to_name(
+            data, criteria["COLUMNS"]
         )
+        if not check_if_column_names_is_in_group_by(select_columns, groupby_columns):
+            raise Exception("there are is a column isn't in groupby columns")
+        data = apply_groupby(data, select_columns, groupby_columns)
+        print(data)
     else:
         if criteria["COLUMNS"] != "__all__":
             columns: list[str | Tuple] = criteria["COLUMNS"]

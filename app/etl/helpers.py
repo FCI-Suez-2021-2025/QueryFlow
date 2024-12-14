@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from typing import Any, Tuple
+from typing import Any, Generic, Tuple, TypeVar
 
 
 def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.DataFrame:
@@ -166,6 +166,109 @@ def generate_aggregation_row(df: pd.DataFrame, aggregation_list: list[Tuple[str,
     # Aggregated DataFrame with the unique columns
     unique_columns_df = pd.DataFrame(agg_dict, index=[0])
     return unique_columns_df[new_column_names]
+
+
+def group_by_columns_names(
+    df: pd.DataFrame, columns_expressions: list[str]
+) -> list[str]:
+    column_names = [None] * len(columns_expressions)
+    for i in range(len(columns_expressions)):
+        column_expression = columns_expressions[i]
+        if is_index(column_expression):
+            column_name = column_index_to_name(df, column_expression)
+        else:
+            column_name = column_expression
+        column_names[i] = column_name
+    return column_names
+
+
+def is_index(value: str) -> bool:
+    if value.startswith("[") and value.endswith("]"):
+        return True
+    return False
+
+
+def column_index_to_name(df: pd.DataFrame, index_expression: str) -> str:
+    column_number = int(index_expression[1:-1])
+    return df.columns[column_number]
+
+
+T = TypeVar("T")
+
+
+def get_unique(items: list[T]) -> list[T]:
+    unique_list = []
+    seen = set()
+
+    for item in items:
+        if item not in seen:
+            unique_list.append(item)
+            seen.add(item)
+    return unique_list
+
+
+def convert_select_column_indices_to_name(
+    df: pd.DataFrame,
+    select_columns: list[tuple[str | str] | str],
+) -> list[str | tuple[str, str]]:
+    result_columns = [None] * len(select_columns)
+    for index in range(len(select_columns)):
+        item = select_columns[index]
+        if type(item) == tuple:
+            agg, column = item
+            if is_index(column):
+                column_name = column_index_to_name(df, column)
+                result_columns[index] = (agg, column_name)
+            else:
+                column_name = column
+                result_columns[index] = (agg, column_name)
+        else:
+            column = item
+            if is_index(column):
+                column_name = column_index_to_name(df, column)
+                result_columns[index] = column_name
+            else:
+                column_name = column
+                result_columns[index] = column_name
+    return result_columns
+
+
+def check_if_column_names_is_in_group_by(
+    columns: list[str | tuple], groupby_columns: list[str]
+) -> bool:
+    columns_names = filter(lambda x: type(x) == str, columns)
+    groupby_columns = set(groupby_columns)
+    return all(column_name in groupby_columns for column_name in columns_names)
+
+
+def apply_groupby(
+    df: pd.DataFrame, columns: list[str | tuple], groupby_columns: list[str]
+) -> pd.DataFrame:
+    dict = {}
+    aggregation_columns = list(filter(lambda x: type(x) == tuple, columns))
+    for agg_function, column in aggregation_columns:
+        current_functions: list = dict.get(column, list())
+        current_functions.append(agg_function)
+        dict[column] = current_functions
+
+    for column, agg_functions in dict.items():
+        dict[column] = list(set(agg_functions))
+    grouped_df = df.groupby(groupby_columns).agg(dict).reset_index()
+    # region flatten columns
+    list_of_columns = []
+    for column in grouped_df.columns:
+        if type(column) is tuple:
+            column_name: str = column[0]
+            agg: str = column[1]
+            if agg.strip():
+                list_of_columns.append(f"{agg}_{column_name}")
+            else:
+                list_of_columns.append(column_name)
+        else:
+            list_of_columns.append(column)
+    grouped_df.columns = list_of_columns
+    # endregion
+    return grouped_df
 
 
 # def __get_source_type(data_source:str) -> str:

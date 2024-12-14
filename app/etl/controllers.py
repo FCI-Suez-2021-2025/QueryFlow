@@ -121,7 +121,8 @@ def execute_python_code(
         return Success(transformed_data)
 
     except Exception as ex:
-
+        print(ex)
+        print(traceback.format_exc())
         return Failure(
             PythonExecutionError(
                 message=str(ex),
