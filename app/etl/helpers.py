@@ -244,6 +244,11 @@ def check_if_column_names_is_in_group_by(
 def apply_groupby(
     df: pd.DataFrame, columns: list[str | tuple], groupby_columns: list[str]
 ) -> pd.DataFrame:
+    new_column_names = list(
+        map(lambda x: "_".join(x) if type(x) == tuple else x, columns)
+    )
+    print(new_column_names)
+
     dict = {}
     aggregation_columns = list(filter(lambda x: type(x) == tuple, columns))
     for agg_function, column in aggregation_columns:
@@ -255,6 +260,33 @@ def apply_groupby(
         dict[column] = list(set(agg_functions))
     grouped_df = df.groupby(groupby_columns).agg(dict).reset_index()
     # region flatten columns
+    list_of_columns = flatten_columns(grouped_df)
+    grouped_df.columns = list_of_columns
+    # endregion
+    return grouped_df[new_column_names]
+
+
+def flatten_columns(grouped_df) -> list:
+    """
+    This function takes in a grouped DataFrame and returns a list of
+    flattened column names. The function works by iterating over the
+    columns of the DataFrame and checking if the column is a tuple or
+    not. If the column is a tuple, it is assumed to be a multi-level
+    index and the function tries to flatten the column name by
+    concatenating the aggregation function and the column name with
+    an underscore. If the column is not a tuple, it is simply added to
+    the list of flattened column names.
+
+    Parameters
+    ----------
+    grouped_df : pd.DataFrame
+        The grouped DataFrame to flatten the column names of.
+
+    Returns
+    -------
+    list
+        A list of flattened column names.
+    """
     list_of_columns = []
     for column in grouped_df.columns:
         if type(column) is tuple:
@@ -266,9 +298,7 @@ def apply_groupby(
                 list_of_columns.append(column_name)
         else:
             list_of_columns.append(column)
-    grouped_df.columns = list_of_columns
-    # endregion
-    return grouped_df
+    return list_of_columns
 
 
 # def __get_source_type(data_source:str) -> str:
