@@ -1,3 +1,11 @@
+from app.compiler.ast_nodes import (
+    AggregationNode,
+    ColumnIndexNode,
+    ColumnNameNode,
+    OrderByNode,
+    OrderByParameter,
+    SortingWay,
+)
 from app.core.errors import ParserError
 
 
@@ -45,8 +53,8 @@ def p_select(p):
     if p[4]:
         load_type, load_path = p[4].split(":", 1)
     p[0] = (
-        f"from app import etl\n"
-        f"\n"
+        "from app import etl\n"
+        "from app.compiler.ast_nodes import *\n\n"
         f"extracted_data = etl.extract('{file_type}','{file_path}')\n"
         f"transformed_data = etl.transform_select(\n"
         f"   extracted_data,\n"
@@ -198,12 +206,6 @@ def p_column(p):
     p[0] = p[1]
 
 
-# def p_column_name(p):
-#     """column_name : BRACKETED_COLNAME
-#     | SIMPLE_COLNAME"""
-#     p[0] = p[1]
-
-
 def p_columns(p):
     """columns : columns COMMA columns"""
     p[0] = []
@@ -275,12 +277,63 @@ def p_group_empty(p):
 ###########################
 # ======= Order by =========
 ###########################
+def p_simple_column_name(p):
+    """simple_column_name : SIMPLE_COLNAME"""
+    p[0] = ColumnNameNode(str(p[1]))
+
+
+def p_bracketed_column_name(p):
+    """bracketed_column_name : BRACKETED_COLNAME"""
+    token = str(p[1])
+    # to remove the scare brackets token[1:-1]
+    p[0] = ColumnNameNode(token[1:-1])
+
+
+def p_column_index(p):
+    """column_index : COLNUMBER"""
+    token = str(p[1])
+    # to remove the scare brackets token[1:-1] and cast the str to int
+    index = int(token[1:-1])
+
+    p[0] = ColumnIndexNode(index=index)
+
+
+def p_custom_column(p):
+    """custom_column : bracketed_column_name
+    | simple_column_name
+    | column_index"""
+    p[0] = p[1]
+
+
+def p_custom_aggregation_column(p):
+    """custom_aggregation_column : AGGREGATION_FUNCTION LPAREN custom_column RPAREN"""
+    p[0] = AggregationNode(p[1], p[3])
+
+
+def p_order_by_param(p):
+    """order_by_param : custom_aggregation_column way
+    | custom_column way"""
+    sorting_way: SortingWay = p[2]
+    parameter = p[1]
+    p[0] = OrderByParameter(parameter=parameter, way=sorting_way)
+
+
+def p_order_by_parameters_base(p):
+    """order_by_parameters : order_by_param"""
+    p[0] = list[OrderByParameter]([p[1]])
+
+
+def p_order_by_parameters(p):
+    """order_by_parameters : order_by_parameters COMMA order_by_parameters"""
+    params_list = list[OrderByParameter]()
+    params_list.extend(p[1])
+    params_list.extend(p[3])
+    p[0] = params_list
 
 
 def p_order(p):
-    """order : ORDER BY column way
-    | ORDER BY aggregation_function way"""
-    p[0] = (p[3], p[4])
+    """order : ORDER BY order_by_parameters"""
+    p[0] = OrderByNode(parameters=p[3])
 
 
 def p_order_empty(p):
@@ -291,12 +344,12 @@ def p_order_empty(p):
 def p_way_asc(p):
     """way : ASC
     | empty"""
-    p[0] = "asc"
+    p[0] = SortingWay.ASC
 
 
 def p_way_desc(p):
     "way : DESC"
-    p[0] = "desc"
+    p[0] = SortingWay.DESC
 
 
 ###########################

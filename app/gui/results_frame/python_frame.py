@@ -1,4 +1,5 @@
 from typing import Any, Tuple
+import black
 import customtkinter as ctk
 
 
@@ -33,7 +34,7 @@ class PythonResultFrame(ctk.CTkFrame):
         self.label = ctk.CTkLabel(
             self, text="Python Code"  # , font=("Arial", 12, "bold")
         )
-        self.code_textbox = ctk.CTkTextbox(self)
+        self.code_textbox = ctk.CTkTextbox(self, wrap="none")
         self.copy_button = ctk.CTkButton(
             self, text="Copy to Clipboard", command=self.copy_to_clipboard
         )
@@ -42,8 +43,9 @@ class PythonResultFrame(ctk.CTkFrame):
         self.copy_button.pack(pady=5)
 
     def set_code(self, python_code: str) -> None:
+        formatted_code = black.format_str(python_code, mode=black.FileMode())
         self.code_textbox.delete("1.0", "end")
-        self.code_textbox.insert("1.0", python_code)
+        self.code_textbox.insert("1.0", formatted_code)
 
     def get_code(self) -> str:
         return self.code_textbox.get("1.0", "end-1c").strip()
