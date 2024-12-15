@@ -1,13 +1,7 @@
 import itertools
 from typing import Any, Callable, Tuple
 import pandas as pd
-from app.compiler.ast_nodes import (
-    AggregationNode,
-    ColumnIndexNode,
-    ColumnNameNode,
-    OrderByNode,
-    OrderByParameter,
-)
+from app.compiler.ast_nodes import *
 from app.etl.data.data_factories import (
     LoaderDataFactory,
     ExtractorDataFactory,
@@ -21,6 +15,7 @@ from app.etl.helpers import (
     generate_aggregation_row,
     get_unique,
     group_by_columns_names,
+    apply_order_by_without_groupby,
 )
 
 
@@ -123,5 +118,3 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 def load(data: pd.DataFrame, source_type: str, data_destination: str):
     data_loader: ILoader = LoaderDataFactory.create(source_type, data_destination)
     data_loader.load(data)
-
-
