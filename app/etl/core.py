@@ -1,6 +1,12 @@
 import itertools
 from typing import Any, Callable, Tuple
 import pandas as pd
+from app.compiler.ast_nodes import (
+    ColumnIndexNode,
+    ColumnNameNode,
+    OrderByNode,
+    OrderByParameter,
+)
 from app.etl.data.data_factories import (
     LoaderDataFactory,
     ExtractorDataFactory,
@@ -29,22 +35,34 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
 
 
 def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
-
+    if criteria["COLUMNS"] != "__all__":
+        are_select_columns_aggregation = all(
+            type(item) == tuple for item in criteria["COLUMNS"]
+        )
     # filtering
     if criteria["FILTER"]:
         data = apply_filtering(data, criteria["FILTER"])
-    if not criteria["GROUP"]:
-        # ordering
-        if criteria["ORDER"]:
-            tuple_order = criteria["ORDER"]
-            column: str = tuple_order[0]
-            sorting_way: str = tuple_order[1]
 
-            # to handle if the column is passed by number not buy name
-            if column.startswith("[") and column.endswith("]"):
-                column_number = int(column[1:-1])
-                column = data.columns[column_number]
-            data = data.sort_values(column, ascending=sorting_way == "asc")
+    if (
+        not criteria["GROUP"]
+        and criteria["ORDER"]
+        and not are_select_columns_aggregation
+    ):
+        order_by_node: OrderByNode = criteria["ORDER"]
+        order_parameters: list[OrderByParameter] = order_by_node.parameters
+        for order_parameter in order_parameters:
+            if type(order_parameter.parameter) is ColumnIndexNode:
+                order_parameter.parameter = column_index_to_column_name(
+                    data, order_parameter.parameter
+                )
+
+        order_columns = [order_param.parameter.name for order_param in order_parameters]
+        order_ways_boolean = [
+            order_param.way.value == "asc" for order_param in order_parameters
+        ]
+        if len(order_columns) != len(set(order_columns)):
+            raise Exception("there are duplicate columns in order by")
+        data = data.sort_values(order_columns, ascending=order_ways_boolean)
     if criteria["GROUP"]:
         groupby_columns = get_unique(group_by_columns_names(data, criteria["GROUP"]))
         select_columns = convert_select_column_indices_to_name(
@@ -61,7 +79,8 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
                 "["
             ) and x.endswith("]")
             # if all the select columns are aggregation functions
-            if all(type(item) == tuple for item in columns):
+
+            if are_select_columns_aggregation:
                 # list of tuples each tuple is (aggregation,colum name)
                 aggregate_columns: list[Tuple[str | Any]] = [
                     (
@@ -86,6 +105,7 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
                 # Select columns
                 data = data[column_names]
+
     # distinct
     if criteria["DISTINCT"]:
         data = data.drop_duplicates()
@@ -109,3 +129,9 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 def load(data: pd.DataFrame, source_type: str, data_destination: str):
     data_loader: ILoader = LoaderDataFactory.create(source_type, data_destination)
     data_loader.load(data)
+
+
+def column_index_to_column_name(
+    data: pd.DataFrame, parameter: ColumnIndexNode
+) -> ColumnNameNode:
+    return ColumnNameNode(data.columns[parameter.index])

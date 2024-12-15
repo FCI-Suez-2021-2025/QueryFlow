@@ -20,7 +20,7 @@ class ColumnNameNode:
 
 @dataclass
 class ColumnIndexNode:
-    index: str
+    index: int
 
 
 @dataclass
