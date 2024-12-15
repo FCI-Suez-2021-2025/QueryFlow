@@ -32,6 +32,7 @@ def extract(data_source_type: str, data_source_path: str) -> pd.DataFrame:
 
 
 def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
+    are_select_columns_aggregation = False
     if criteria["COLUMNS"] != "__all__":
         are_select_columns_aggregation = all(
             type(item) == tuple for item in criteria["COLUMNS"]
