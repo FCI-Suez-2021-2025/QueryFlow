@@ -2,6 +2,14 @@ import pandas as pd
 import re
 from typing import Any, Generic, Tuple, TypeVar
 
+from app.compiler.ast_nodes import *
+
+
+def column_index_to_column_name(
+    data: pd.DataFrame, parameter: ColumnIndexNode
+) -> ColumnNameNode:
+    return ColumnNameNode(data.columns[parameter.index])
+
 
 def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.DataFrame:
     # if it's a unary expression
@@ -321,6 +329,31 @@ def flatten_columns(grouped_df) -> list:
         else:
             list_of_columns.append(column)
     return list_of_columns
+
+
+def apply_order_by_without_groupby(data: pd.DataFrame, order_by_node: OrderByNode):
+    order_parameters: list[OrderByParameter] = order_by_node.parameters
+    if any(
+        type(order_parameter.parameter) is AggregationNode
+        for order_parameter in order_parameters
+    ):
+        raise Exception(
+            "there are aggregation columns in order by you should use group by"
+        )
+    for order_parameter in order_parameters:
+        if type(order_parameter.parameter) is ColumnIndexNode:
+            order_parameter.parameter = column_index_to_column_name(
+                data, order_parameter.parameter
+            )
+
+    order_columns = [order_param.parameter.name for order_param in order_parameters]
+    order_ways_boolean = [
+        order_param.way.value == "asc" for order_param in order_parameters
+    ]
+    if len(order_columns) != len(set(order_columns)):
+        raise Exception("there are duplicate columns in order by")
+    data = data.sort_values(order_columns, ascending=order_ways_boolean)
+    return data
 
 
 # def __get_source_type(data_source:str) -> str:
