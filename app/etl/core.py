@@ -2,6 +2,7 @@ import itertools
 from typing import Any, Callable, Tuple
 import pandas as pd
 from app.compiler.ast_nodes import (
+    AggregationNode,
     ColumnIndexNode,
     ColumnNameNode,
     OrderByNode,
@@ -50,6 +51,13 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
     ):
         order_by_node: OrderByNode = criteria["ORDER"]
         order_parameters: list[OrderByParameter] = order_by_node.parameters
+        if any(
+            type(order_parameter.parameter) is AggregationNode
+            for order_parameter in order_parameters
+        ):
+            raise Exception(
+                "there are aggregation columns in order by you should use group by"
+            )
         for order_parameter in order_parameters:
             if type(order_parameter.parameter) is ColumnIndexNode:
                 order_parameter.parameter = column_index_to_column_name(
@@ -93,7 +101,12 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
 
                 data = generate_aggregation_row(data, aggregate_columns)
 
-            else:  # assuming that select columns don't contain any aggregate
+            else:
+                if any(type(column) == tuple for column in columns):
+                    raise Exception(
+                        "there are aggregation columns in select you should use group by"
+                    )
+                # assuming that select columns don't contain any aggregate
                 column_names = [
                     (
                         data.columns[int(column[1:-1])]

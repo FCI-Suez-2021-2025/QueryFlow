@@ -32,7 +32,7 @@ class AggregationNode:
 @dataclass
 class OrderByParameter:
     parameter: ColumnNameNode | ColumnIndexNode | AggregationNode
-    way: SortingWay = SortingWay.ASC
+    way: SortingWay
 
 
 @dataclass
