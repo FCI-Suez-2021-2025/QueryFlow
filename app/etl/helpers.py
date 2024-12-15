@@ -69,7 +69,7 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
         return data[left_operand <= right_operand]
     elif operator == "==":
         return data[left_operand == right_operand]
-    elif operator == "!=":
+    elif operator == "!=" or operator == "<>":
         return data[left_operand != right_operand]
 
     return data
