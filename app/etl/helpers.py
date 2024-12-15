@@ -322,7 +322,7 @@ def apply_groupby_with_order(
                     f"column {order_parameter.parameter.name} is not in group by"
                 )
 
-    order_columns = [None] * len(order_parameters)
+    order_columns: list[str | tuple] = [None] * len(order_parameters)
     order_ways_boolean = [None] * len(order_parameters)
     for i, order_param in enumerate(order_parameters):
         if type(order_param.parameter) is ColumnNameNode:
@@ -339,8 +339,8 @@ def apply_groupby_with_order(
         raise Exception("there are duplicate columns in order by")
 
     size_columns_order = []
-    for i in range(len(columns)):
-        c = columns[i]
+    for i in range(len(order_columns)):
+        c = order_columns[i]
         if type(c) == tuple:
             if c == ("size", "*"):
                 size_columns_order.append((i, "size_rows"))
@@ -348,7 +348,7 @@ def apply_groupby_with_order(
                 size_columns_order.append((i, f"size_{c[1]}"))
 
     size_columns = []
-    for i in range(len(order_columns)):
+    for i in range(len(columns)):
         c = columns[i]
         if type(c) == tuple:
             if c == ("size", "*"):
@@ -371,7 +371,6 @@ def apply_groupby_with_order(
     order_columns_names = list(
         map(lambda x: "_".join(x) if type(x) == tuple else x, order_columns)
     )
-    print(order_columns_names)
 
     dict = {}
     aggregation_columns = list(
