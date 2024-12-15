@@ -205,13 +205,11 @@ def t_DELETE(t):
 
 @TOKEN(r"desc")
 def t_DESC(t):
-    t.value = t.value.lower()
     return t
 
 
 @TOKEN(r"asc")
 def t_ASC(t):
-    t.value = t.value.lower()
     return t
 
 
@@ -237,7 +235,6 @@ def t_SIMPLE_COLNAME(t):
 
 @TOKEN(bracketed_identifier)
 def t_BRACKETED_COLNAME(t):
-    t.value = t.value[1:-1]
     return t
 
 

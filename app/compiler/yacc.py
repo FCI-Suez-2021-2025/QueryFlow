@@ -203,7 +203,10 @@ def p_column(p):
     """column : COLNUMBER
     | BRACKETED_COLNAME
     | SIMPLE_COLNAME"""
-    p[0] = p[1]
+    c = str(p[1])
+    if c.startswith("[") and c.endswith("]") and not c[1:-1].isdigit():
+        c = c[1:-1]
+    p[0] = c
 
 
 def p_columns(p):
