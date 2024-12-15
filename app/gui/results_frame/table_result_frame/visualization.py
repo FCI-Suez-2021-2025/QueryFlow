@@ -19,6 +19,7 @@ class DataVisualizer:
         self.create_visualization_window()
 
     def create_visualization_window(self):
+        print("xx")
         if self.data_frame is None or self.data_frame.empty:
             return
 
@@ -26,6 +27,7 @@ class DataVisualizer:
         self.popup = ctk.CTkToplevel(self.master)
         self.popup.title("Select Visualization Options")
         self.popup.geometry("600x700")
+        self.popup.grab_set()
 
         # Create tabs for different graph types
         self.tabview = ctk.CTkTabview(self.popup)
@@ -202,8 +204,10 @@ class DataVisualizer:
                 self.current_figure["fig"].savefig(file_path)
 
 
-def visualize(master_widget, data_frame):
+def visualize(master_widget, data_frame: DataFrame):
     """
     Opens a pop-up window for visualization with the given DataFrame.
     """
+    if data_frame is None or data_frame.empty:
+        return
     DataVisualizer(master_widget, data_frame)
