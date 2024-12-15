@@ -8,6 +8,7 @@ class Colorizer:
             "background": "#1E1E1E",
             "text": "#D4D4D4",
             "keyword": "#569CD6",  # Light blue
+            "aggregation": "#C678DD",  # Purple
             "string": "#CE9178",  # Light orange
             "comment": "#6A9955",  # Light green
             "number": "#B5CEA8",  # Light greenish
@@ -22,6 +23,7 @@ class Colorizer:
             "background": "#FFFFFF",
             "text": "#000000",
             "keyword": "#0000FF",  # Dark blue
+            "aggregation": "#800080",  # Purple
             "string": "#A31515",  # Dark red
             "comment": "#008000",  # Green
             "number": "#098658",  # Dark teal
@@ -54,17 +56,43 @@ class Colorizer:
         "UPDATE",
         "SET",
         "DELETE",
+        "GROUP",
     ]
+    AGGREGATION_FUNCTIONS = [
+        "SUM",
+        "MEAN",
+        "MEDIAN",
+        "MIN",
+        "MAX",
+        "COUNT",
+        "NUNIQUE",
+        "STD",
+        "VAR",
+        "FIRST",
+        "LAST",
+        "PROD",
+        "SEM",
+        "DESCRIBE",
+        "SIZE",
+        "QUANTILE",
+    ]
+
     TAGS = [
         "keyword",
         "string",
         "comment",
         "number",
+        "aggregation",
         "square_brackets",
         "curly_brackets",
         "round_brackets",
         "angle_brackets",
     ]
+    # Create keywords regex pattern
+    KEYWORDS_PATTERN = r"\b(" + "|".join(re.escape(kw) for kw in KEYWORDS) + r")\b"
+    AGGREGATION_PATTERN = (
+        r"\b(" + "|".join(re.escape(agg) for agg in AGGREGATION_FUNCTIONS) + r")\b"
+    )
 
     def highlight_syntax(textbox_widget: ctk.CTkTextbox, mode: str):
         colors = Colorizer.COLOR_SCHEMES[mode]
@@ -81,17 +109,12 @@ class Colorizer:
         # Get text content
         text_content = textbox_widget.get("1.0", "end")
 
-        # Create keywords regex pattern
-        keywords_pattern = (
-            r"\b(" + "|".join(re.escape(kw) for kw in Colorizer.KEYWORDS) + r")\b"
-        )
-
         # Syntax highlighting patterns
         patterns = [
             # Keywords (case-insensitive, avoiding bracketed column names)
             (
                 "keyword",
-                keywords_pattern,
+                Colorizer.KEYWORDS_PATTERN,
                 lambda match: not (
                     text_content[max(0, match.start() - 1) : match.start()].startswith(
                         "["
@@ -99,6 +122,8 @@ class Colorizer:
                     and text_content[match.end() : match.end() + 1].startswith("]")
                 ),
             ),
+            # Aggregation functions
+            ("aggregation", Colorizer.AGGREGATION_PATTERN, None),
             # Strings (both single and double quotes)
             ("string", r'".*?"|\'.*?\'', None),
             # Comments (multi-line)
@@ -128,6 +153,7 @@ class Colorizer:
 
         # Configure tag colors
         textbox_widget.tag_config("keyword", foreground=colors["keyword"])
+        textbox_widget.tag_config("aggregation", foreground=colors["aggregation"])
         textbox_widget.tag_config("string", foreground=colors["string"])
         textbox_widget.tag_config("comment", foreground=colors["comment"])
         textbox_widget.tag_config("number", foreground=colors["number"])

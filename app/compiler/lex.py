@@ -13,6 +13,7 @@ reserved = [
     "INSERT",
     "AND",
     "ORDER",
+    "GROUP",
     "OR",
     "NOT",
     "DISTINCT",
@@ -51,9 +52,9 @@ tokens = [
     "COMMA",
     "STRING",
     "PATTERN",
+    "AGGREGATION_FUNCTION",
 ] + reserved
-# t_SELECT=r"select"
-# t_WHERe=
+
 # Regular expression rules for simple tokens
 t_PLUS = r"\+"
 t_MINUS = r"-"
@@ -63,7 +64,7 @@ t_PERCENT = r"%"
 t_LPAREN = r"\("
 t_RPAREN = r"\)"
 t_EQUAL = r"=="
-t_NOTEQUAL = r"<>"
+t_NOTEQUAL = r"<>|!="
 t_BIGGER_EQUAL = r">="
 t_BIGGER = r">"
 t_SMALLER_EQUAL = r"<="
@@ -80,6 +81,26 @@ nondigit = r"([_A-Za-z])"
 # the next pattern not enforce full match
 bracketed_identifier = r"\[([_A-Za-z][ _A-Za-z0-9]*)\]"
 simple_identifier = r"(" + nondigit + r"(" + digit + r"|" + nondigit + r")*)"
+
+agg_functions = [
+    "sum",  # Sum of values
+    "mean",  # Average (mean) of values
+    "median",  # Median of values
+    "min",  # Minimum value
+    "max",  # Maximum value
+    "count",  # Count of non-null values
+    "nunique",  # Number of unique values
+    "std",  # Standard deviation
+    "var",  # Variance of values
+    "first",  # First value in the group
+    "last",  # Last value in the group
+    "prod",  # Product of values
+    "sem",  # Standard error of the mean
+    "size",  # Size of the group
+    "quantile",  # Quantile (requires a parameter, e.g., q=0.25)
+]
+aggregation_re = r"\b(?:(?![\{\[])(?:" + "|".join(agg_functions) + r")\b(?![\}\]]))"
+# r"\b(?:" + "|".join(agg_functions) + r")\b"
 
 
 # the next line is commented to not include [column number]
@@ -104,6 +125,17 @@ def t_FROM(t):
 
 @TOKEN(r"into")
 def t_INTO(t):
+    return t
+
+
+@TOKEN(r"group")
+def t_GROUP(t):
+    return t
+
+
+@TOKEN(aggregation_re)
+def t_AGGREGATION_FUNCTION(t):
+    t.value = t.value.lower()
     return t
 
 
@@ -173,13 +205,11 @@ def t_DELETE(t):
 
 @TOKEN(r"desc")
 def t_DESC(t):
-    t.value = t.value.lower()
     return t
 
 
 @TOKEN(r"asc")
 def t_ASC(t):
-    t.value = t.value.lower()
     return t
 
 
@@ -205,7 +235,6 @@ def t_SIMPLE_COLNAME(t):
 
 @TOKEN(bracketed_identifier)
 def t_BRACKETED_COLNAME(t):
-    t.value = t.value[1:-1]
     return t
 
 
