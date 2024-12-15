@@ -309,8 +309,13 @@ def p_custom_column(p):
 
 
 def p_custom_aggregation_column(p):
-    """custom_aggregation_column : AGGREGATION_FUNCTION LPAREN custom_column RPAREN"""
-    p[0] = AggregationNode(p[1], p[3])
+    """custom_aggregation_column : AGGREGATION_FUNCTION LPAREN custom_column RPAREN
+    | AGGREGATION_FUNCTION LPAREN TIMES RPAREN"""
+    function = str(p[1])
+    column = p[3]
+    if function == "size" and column == "*":
+        column = ColumnNameNode("*")
+    p[0] = AggregationNode(function, column)
 
 
 def p_order_by_param(p):
