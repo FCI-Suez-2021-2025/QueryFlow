@@ -10,6 +10,7 @@ from app.etl.data.base_data_types import IExtractor, ILoader
 from app.etl.helpers import (
     apply_filtering,
     apply_groupby,
+    apply_groupby_with_order,
     check_if_column_names_is_in_group_by,
     convert_select_column_indices_to_name,
     generate_aggregation_row,
@@ -54,7 +55,13 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
         )
         if not check_if_column_names_is_in_group_by(select_columns, groupby_columns):
             raise Exception("there are is a column isn't in groupby columns")
-        data = apply_groupby(data, select_columns, groupby_columns)
+        if criteria["ORDER"]:
+            order_by_node: OrderByNode = criteria["ORDER"]
+            data = apply_groupby_with_order(
+                data, select_columns, groupby_columns, order_by_node
+            )
+        else:
+            data = apply_groupby(data, select_columns, groupby_columns)
         print(data)
     else:
         if criteria["COLUMNS"] != "__all__":

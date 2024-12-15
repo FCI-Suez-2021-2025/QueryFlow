@@ -296,6 +296,113 @@ def apply_groupby(
     return grouped_df
 
 
+def apply_groupby_with_order(
+    df: pd.DataFrame,
+    columns: list[str | tuple],
+    groupby_columns: list[str],
+    order_by_node: OrderByNode,
+) -> pd.DataFrame:
+    order_parameters = order_by_node.parameters
+    test_set = set(groupby_columns)
+    for order_parameter in order_parameters:
+        if type(order_parameter.parameter) is ColumnIndexNode:
+            order_parameter.parameter = column_index_to_column_name(
+                df, order_parameter.parameter
+            )
+        elif (
+            type(order_parameter.parameter) is AggregationNode
+            and type(order_parameter.parameter.column) is ColumnIndexNode
+        ):
+            order_parameter.parameter.column = column_index_to_column_name(
+                df, order_parameter.parameter.column
+            )
+        elif type(order_parameter.parameter) is ColumnNameNode:
+            if order_parameter.parameter.name not in test_set:
+                raise Exception(
+                    f"column {order_parameter.parameter.name} is not in group by"
+                )
+
+    order_columns = [None] * len(order_parameters)
+    order_ways_boolean = [None] * len(order_parameters)
+    for i, order_param in enumerate(order_parameters):
+        if type(order_param.parameter) is ColumnNameNode:
+            order_columns[i] = order_param.parameter.name
+            order_ways_boolean[i] = order_param.way.value == "asc"
+        elif type(order_param.parameter) is AggregationNode:
+            order_columns[i] = (
+                order_param.parameter.function,
+                order_param.parameter.column.name,
+            )
+            order_ways_boolean[i] = order_param.way.value == "asc"
+
+    if len(order_columns) != len(set(order_columns)):
+        raise Exception("there are duplicate columns in order by")
+
+    size_columns_order = []
+    for i in range(len(columns)):
+        c = columns[i]
+        if type(c) == tuple:
+            if c == ("size", "*"):
+                size_columns_order.append((i, "size_rows"))
+            elif c[0] == "size":
+                size_columns_order.append((i, f"size_{c[1]}"))
+
+    size_columns = []
+    for i in range(len(order_columns)):
+        c = columns[i]
+        if type(c) == tuple:
+            if c == ("size", "*"):
+                size_columns.append((i, "size_rows"))
+            elif c[0] == "size":
+                size_columns.append((i, f"size_{c[1]}"))
+
+    if size_columns or size_columns_order:
+        for item in size_columns:
+            index: int = item[0]
+            columns[index] = ("size", df.columns[0])
+
+        for item in size_columns_order:
+            index: int = item[0]
+            order_columns[index] = ("size", df.columns[0])
+
+    new_column_names = list(
+        map(lambda x: "_".join(x) if type(x) == tuple else x, columns)
+    )
+    order_columns_names = list(
+        map(lambda x: "_".join(x) if type(x) == tuple else x, order_columns)
+    )
+    print(order_columns_names)
+
+    dict = {}
+    aggregation_columns = list(
+        filter(lambda x: type(x) == tuple, columns + order_columns)
+    )
+    for agg_function, column in aggregation_columns:
+        current_functions: list = dict.get(column, list())
+        current_functions.append(agg_function)
+        dict[column] = current_functions
+
+    for column, agg_functions in dict.items():
+        dict[column] = list(set(agg_functions))
+    grouped_df: pd.DataFrame = df.groupby(groupby_columns).agg(dict).reset_index()
+
+    # region flatten columns
+    list_of_columns = flatten_columns(grouped_df)
+    grouped_df.columns = list_of_columns
+    # endregion
+    grouped_df = grouped_df.sort_values(
+        order_columns_names, ascending=order_ways_boolean
+    )[new_column_names]
+
+    if size_columns:
+        original_columns_names = new_column_names.copy()
+        for i, column in size_columns:
+            original_columns_names[i] = column
+        grouped_df.columns = original_columns_names
+
+    return grouped_df
+
+
 def flatten_columns(grouped_df) -> list:
     """
     This function takes in a grouped DataFrame and returns a list of
