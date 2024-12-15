@@ -37,7 +37,7 @@ def apply_filtering(data: pd.DataFrame, filters_expressions_tree: dict) -> pd.Da
     left_operand: str = filters_expressions_tree["left"]
 
     right_operand = filters_expressions_tree["right"]
-    # region get the value in the right operand and check if it is a int or float or string or its a column passed by name or number
+    # region get the value in the right operand and check if it is an int or float or string or its a column passed by name or number
     if type(right_operand) == str:
         if right_operand.startswith('"') and right_operand.endswith('"'):
             right_operand: str = right_operand[1:-1]
@@ -250,11 +250,11 @@ def check_if_column_names_is_in_group_by(
 
 
 def apply_groupby(
-    df: pd.DataFrame, columns: list[str | tuple], groupby_columns: list[str]
+    df: pd.DataFrame, select_columns: list[str | tuple], groupby_columns: list[str]
 ) -> pd.DataFrame:
     size_columns = []
-    for i in range(len(columns)):
-        c = columns[i]
+    for i in range(len(select_columns)):
+        c = select_columns[i]
         if type(c) == tuple:
             if c == ("size", "*"):
                 size_columns.append((i, "size_rows"))
@@ -264,15 +264,15 @@ def apply_groupby(
     if size_columns:
         for item in size_columns:
             index: int = item[0]
-            columns[index] = ("size", df.columns[0])
+            select_columns[index] = ("size", df.columns[0])
 
     new_column_names = list(
-        map(lambda x: "_".join(x) if type(x) == tuple else x, columns)
+        map(lambda x: "_".join(x) if type(x) == tuple else x, select_columns)
     )
     print(new_column_names)
 
     dict = {}
-    aggregation_columns = list(filter(lambda x: type(x) == tuple, columns))
+    aggregation_columns = list(filter(lambda x: type(x) == tuple, select_columns))
     for agg_function, column in aggregation_columns:
         current_functions: list = dict.get(column, list())
         current_functions.append(agg_function)
@@ -298,7 +298,7 @@ def apply_groupby(
 
 def apply_groupby_with_order(
     df: pd.DataFrame,
-    columns: list[str | tuple],
+    select_columns: list[str | tuple],
     groupby_columns: list[str],
     order_by_node: OrderByNode,
 ) -> pd.DataFrame:
@@ -348,25 +348,24 @@ def apply_groupby_with_order(
                 size_columns_order.append((i, f"size_{c[1]}"))
 
     size_columns = []
-    for i in range(len(columns)):
-        c = columns[i]
+    for i in range(len(select_columns)):
+        c = select_columns[i]
         if type(c) == tuple:
             if c == ("size", "*"):
                 size_columns.append((i, "size_rows"))
             elif c[0] == "size":
                 size_columns.append((i, f"size_{c[1]}"))
 
-    if size_columns or size_columns_order:
-        for item in size_columns:
-            index: int = item[0]
-            columns[index] = ("size", df.columns[0])
+    for item in size_columns:
+        index: int = item[0]
+        select_columns[index] = ("size", df.columns[0])
 
-        for item in size_columns_order:
-            index: int = item[0]
-            order_columns[index] = ("size", df.columns[0])
+    for item in size_columns_order:
+        index: int = item[0]
+        order_columns[index] = ("size", df.columns[0])
 
     new_column_names = list(
-        map(lambda x: "_".join(x) if type(x) == tuple else x, columns)
+        map(lambda x: "_".join(x) if type(x) == tuple else x, select_columns)
     )
     order_columns_names = list(
         map(lambda x: "_".join(x) if type(x) == tuple else x, order_columns)
@@ -374,7 +373,7 @@ def apply_groupby_with_order(
 
     dict = {}
     aggregation_columns = list(
-        filter(lambda x: type(x) == tuple, columns + order_columns)
+        filter(lambda x: type(x) == tuple, select_columns + order_columns)
     )
     for agg_function, column in aggregation_columns:
         current_functions: list = dict.get(column, list())
