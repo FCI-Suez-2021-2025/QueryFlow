@@ -244,6 +244,20 @@ def check_if_column_names_is_in_group_by(
 def apply_groupby(
     df: pd.DataFrame, columns: list[str | tuple], groupby_columns: list[str]
 ) -> pd.DataFrame:
+    size_columns = []
+    for i in range(len(columns)):
+        c = columns[i]
+        if type(c) == tuple:
+            if c == ("size", "*"):
+                size_columns.append((i, "size_rows"))
+            elif c[0] == "size":
+                size_columns.append((i, f"size_{c[1]}"))
+
+    if size_columns:
+        for item in size_columns:
+            index: int = item[0]
+            columns[index] = ("size", df.columns[0])
+
     new_column_names = list(
         map(lambda x: "_".join(x) if type(x) == tuple else x, columns)
     )
@@ -263,7 +277,15 @@ def apply_groupby(
     list_of_columns = flatten_columns(grouped_df)
     grouped_df.columns = list_of_columns
     # endregion
-    return grouped_df[new_column_names]
+    grouped_df = grouped_df[new_column_names]
+
+    if size_columns:
+        original_columns_names = new_column_names.copy()
+        for i, column in size_columns:
+            original_columns_names[i] = column
+        grouped_df.columns = original_columns_names
+
+    return grouped_df
 
 
 def flatten_columns(grouped_df) -> list:
