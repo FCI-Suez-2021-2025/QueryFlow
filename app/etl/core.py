@@ -63,7 +63,7 @@ def transform_select(data: pd.DataFrame, criteria: dict) -> pd.DataFrame:
             )
         else:
             data = apply_groupby(data, select_columns, groupby_columns)
-        print(data)
+
     else:
         if criteria["COLUMNS"] != "__all__":
             columns: list[str | Tuple] = criteria["COLUMNS"]
