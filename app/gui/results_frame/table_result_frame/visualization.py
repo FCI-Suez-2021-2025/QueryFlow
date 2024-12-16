@@ -19,7 +19,6 @@ class DataVisualizer:
         self.create_visualization_window()
 
     def create_visualization_window(self):
-        print("xx")
         if self.data_frame is None or self.data_frame.empty:
             return
 

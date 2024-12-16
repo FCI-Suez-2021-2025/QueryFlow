@@ -269,7 +269,6 @@ def apply_groupby(
     new_column_names = list(
         map(lambda x: "_".join(x) if type(x) == tuple else x, select_columns)
     )
-    print(new_column_names)
 
     dict = {}
     aggregation_columns = list(filter(lambda x: type(x) == tuple, select_columns))
