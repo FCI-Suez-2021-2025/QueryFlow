@@ -1,4 +1,3 @@
-import itertools
 from typing import Any, Callable, Tuple
 import pandas as pd
 from app.compiler.ast_nodes import *

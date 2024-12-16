@@ -1,10 +1,10 @@
-from tkinter import filedialog
 import customtkinter as ctk
+import seaborn as sns
 
+from tkinter import filedialog
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pandas import DataFrame
-import seaborn as sns
 
 from app.gui.results_frame.table_result_frame.multi_selection_dropdown import (
     MultiSelectionDropDown,

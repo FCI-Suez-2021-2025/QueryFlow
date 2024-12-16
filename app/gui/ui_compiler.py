@@ -1,5 +1,3 @@
-from platform import uname
-from PIL.ImageTk import PhotoImage
 import customtkinter as ctk
 
 from app.gui.vertical_tab_view.vertical_tab_view import VerticalTabView
@@ -55,18 +53,54 @@ class UICompiler(ctk.CTk):
         self.vertical_tab_view.pack(fill="both", expand=True, padx=20, pady=10)
 
     def set_window_properties(self) -> None:
-        if uname()[0] == "Windows":
-            from ctypes import windll
+        """
+        Set window properties including app icon for different operating systems.
 
-            windll.shell32.SetCurrentProcessExplicitAppUserModelID(
-                "QueryFlow Desktop App.1.0"
-            )
-            self.iconbitmap("./app/gui/Assets/icon.ico")
-        elif uname()[0] == "Linux":
-            self.wm_iconphoto(
-                False,
-                PhotoImage(open("./app/gui/Assets/icon.ico")),
-            )
+        Handles icon setting for Windows and Linux with improved error handling.
+        """
+        import platform
+
+        try:
+            icon_path = "./app/gui/Assets/icon.ico"
+
+            # Windows-specific icon setting
+            if platform.system() == "Windows":
+                try:
+                    from ctypes import windll
+                    windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+                        "QueryFlow Desktop App.1.0"
+                    )
+                    self.iconbitmap(icon_path)
+                except Exception as e:
+                    print(f"Windows icon setting failed: {e}")
+
+            # Linux-specific icon setting
+            elif platform.system() == "Linux":
+                try:
+                    # Use PIL for better image handling
+                    from PIL import Image, ImageTk
+
+                    # Open image with PIL to handle potential file format issues
+                    icon_image = Image.open(icon_path)
+
+                    # Convert to PhotoImage
+                    photo_icon = ImageTk.PhotoImage(icon_image)
+
+                    # Set window icon
+                    self.wm_iconphoto(True, photo_icon)
+                except ImportError:
+                    print("PIL (Pillow) library is required for Linux icon setting. Install with 'pip install pillow'")
+                except FileNotFoundError:
+                    print(f"Icon file not found: {icon_path}")
+                except Exception as e:
+                    print(f"Linux icon setting failed: {e}")
+
+            # macOS support
+            elif platform.system() == "Darwin":
+                print("macOS icon setting not implemented")
+
+        except Exception as e:
+            print(f"Unexpected error in set_window_properties: {e}")
 
     def add_tab(self):
         self.vertical_tab_view.add_tab()
