@@ -1,4 +1,4 @@
-from app.compiler import parser
+from app.compiler import parser, lexer
 
 # from returns.result import Success, Failure
 from typing import Union
@@ -33,9 +33,16 @@ def compile_to_python(
             - Failure[str, None]: Contains a generic error message with the stack trace if an unexpected exception occurs.
     """
     try:
-        # Assuming parser.parse() is some parsing logic for the SQL-like query
-        parsing_result = parser.parse(query)
-        if parsing_result:
+
+        lexer.input(query)
+        # to handle when the query is only comments
+        tokens_exist = any(True for _ in lexer)
+        if tokens_exist:
+            parsing_result = parser.parse(query)
+        else:
+            parsing_result = ""
+
+        if parsing_result is not None:
             return Success(str(parsing_result))  # type: ignore
     except (LexerError, ParserError) as ex:
         return Failure(ex, None)

@@ -74,7 +74,10 @@ t_COMMA = r","
 
 # ignored characters
 t_ignore = " \t"  # Spaces and tabs
-t_ignore_COMMENT = r"/\*.*\*/"  # Comment
+
+
+t_ignore_COMMENT = r"/\*([^*]|\*(?!/))*\*/"  # Comment
+
 
 digit = r"([0-9])"
 nondigit = r"([_A-Za-z])"
