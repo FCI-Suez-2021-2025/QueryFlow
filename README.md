@@ -1,8 +1,10 @@
 <p align="center">
-    <img src=".assets/Logo.png" align="center" width="30%">
+    <img src=".assets/Logo.png" align="center" width="50%">
 </p>
 <p align="center">
-	<img src="https://img.shields.io/github/license/FCI-Suez-2021-2025/QueryFlow?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
+  <a href="https://github.com/FCI-Suez-2021-2025/QueryFlow/blob/fix/optimization/LICENSE">
+    	<img src="https://img.shields.io/github/license/FCI-Suez-2021-2025/QueryFlow?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
+  </a>
 	<img src="https://img.shields.io/github/last-commit/FCI-Suez-2021-2025/QueryFlow?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 	<img src="https://img.shields.io/github/languages/top/FCI-Suez-2021-2025/QueryFlow?style=default&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/FCI-Suez-2021-2025/QueryFlow?style=default&color=0080ff" alt="repo-language-count">
